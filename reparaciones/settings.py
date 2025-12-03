@@ -11,7 +11,7 @@ SECRET_KEY = 'django-insecure-m_k-c_k820d=d(e8_e=q=0+e(f1c50y*f+y)n-n)e-n-n'
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost','taller2-1-ct9t.onrender.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost','taller2-1-ct9t.onrender.com','.onrender.com']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
