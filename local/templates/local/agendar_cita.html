@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda la cita para tu reparación</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
+
+    <style>
+        /* Contenedor principal para centrar y añadir margen */
+        .container-main {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        /* Ajuste para que el calendario se muestre correctamente */
+        #calendar {
+            padding: 10px;
+        }
+    </style>
+</head>
+<div class="container my-5">
+
+    <div class="mb-4">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <a href="/" class="btn btn-secondary me-3">
+                <i class="bi bi-arrow-left"></i> Regresar a Inicio
+            </a>
+
+            <h1 class="text-center flex-grow-1 mb-0">Agenda la cita para tu reparación</h1>
+
+            <div style="width: 175px; visibility: hidden;"></div>
+            </div>
+
+    </div>
+    <div class="row container-main">
+
+        <div class="col-md-4 p-4 border-end">
+            <h4 class="mb-3 text-primary">Agendar ahora</h4>
+
+            <p class="small text-muted mb-4">Agendando como: <strong id="usuario-nombre">Cargando...</strong></p>
+
+            <form id="appointment-form">
+
+                <div class="mb-3">
+                    <label for="inputDate" class="form-label">Fecha (Día, Mes, Año)</label>
+                    <input type="date" class="form-control" id="inputDate" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="inputTime" class="form-label">Hora de Inicio</label>
+                    <input type="time" class="form-control" id="inputTime" min="10:00" max="21:00" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="inputDuration" class="form-label">Duración</label>
+                    <select class="form-select" id="inputDuration" required>
+                        <option value="30" selected>30 minutos</option>
+                        <option value="60">60 minutos</option>
+                        <option value="90">90 minutos</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-success w-100 mt-3">Confirmar Cita</button>
+            </form>
+        </div>
+
+        <div class="col-md-8">
+            <div id='calendar'></div>
+        </div>
+    </div>
+</div>
+
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/es.js'></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var formEl = document.getElementById('appointment-form');
+        var inputDateEl = document.getElementById('inputDate');
+        var inputTimeEl = document.getElementById('inputTime');
+
+        // ⭐️ SIMULACIÓN DE LA VARIABLE DE SESIÓN DEL USUARIO ⭐️
+        const USUARIO_LOGUEADO = {
+            id: 123,
+            nombre: "Juan Pérez",
+            email: "juan.perez@example.com"
+        };
+
+        // Muestra el nombre del usuario en el formulario
+        document.getElementById('usuario-nombre').textContent = USUARIO_LOGUEADO.nombre;
+
+
+        // ------------------------------------------------------------------
+        // ⭐ FUNCIÓN DE AGENDAMIENTO CENTRALIZADA ⭐
+        // ------------------------------------------------------------------
+            async function processAppointment(startDT, endDT) {
+            if (startDT.getTime() >= endDT.getTime()) {
+                alert('❌ Error: La hora de inicio debe ser anterior a la hora de fin.');
+                return false;
+            }
+
+            // NOTA IMPORTANTE: La validación de 10:00 a 21:00 se realiza AHORA en el MANEJADOR DEL FORMULARIO
+            // (ver más abajo) y en el evento 'select' para mayor claridad.
+
+            const fechaCita = startDT.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+            const horaInicio = startDT.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+            const horaFin = endDT.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+
+            const confirmMessage = `
+                --- Confirmación de Cita ---
+                USUARIO: ${USUARIO_LOGUEADO.nombre} (${USUARIO_LOGUEADO.email})
+                FECHA: ${fechaCita}
+                HORA: De ${horaInicio} a ${horaFin}
+
+                ¿Deseas confirmar la cita?
+            `;
+
+if (confirm(confirmMessage)) {
+
+        // 1. ⚙️ Construir los datos para Django (requiere YYYY-MM-DD y HH:MM:SS)
+        const eventData = {
+            // Formatea a YYYY-MM-DD (usando 'en-CA' para el formato ISO de fecha sin hora)
+            fecha_cita: startDT.toLocaleDateString('en-CA'),
+
+            // Formatea a HH:MM:SS (usando 'es-ES' y {hour12: false} para asegurar el 24h)
+            hora_inicio: startDT.toLocaleTimeString('es-ES', { hour12: false }),
+            hora_fin: endDT.toLocaleTimeString('es-ES', { hour12: false }),
+
+            // user_id ya no es necesario si usas @login_required en Django (que toma el usuario de la sesión)
+        };
+
+        console.log('Enviando datos a la API de Django:', eventData);
+
+        // 2. 💻 Realizar la petición POST
+        try {
+            const response = await fetch('/api/agendar-cita/', { // <-- ¡NUEVA URL API!
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // Si eliminaste @csrf_exempt, debes añadir el token CSRF aquí
+                    // 'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify(eventData),
+            });
+
+            const result = await response.json();
+
+            // 3. ✅ Manejar la respuesta
+            if (response.ok && result.status === 'success') {
+                // Agregar el evento al calendario al recibir confirmación del servidor
+                calendar.addEvent({
+                    title: `Cita #${result.cita_id || 'Nuevo'}`,
+                    start: startDT.toISOString(),
+                    end: endDT.toISOString(),
+                    backgroundColor: '#28a745',
+                    borderColor: '#28a745'
+                });
+                alert('✅ Cita Agendada con Éxito!');
+                return true;
+            } else {
+                alert(`❌ Error al agendar la cita: ${result.message || 'Error desconocido'}`);
+                console.error('Error del servidor:', result.message);
+                return false;
+            }
+        } catch (error) {
+            alert('❌ Error de conexión con el servidor. Revisa la consola (F12).');
+            console.error('Error de fetch:', error);
+            return false;
+        }
+    }
+    return false;
+}
+
+        // ------------------------------------------------------------------
+        // ⭐ MANEJADOR DE EVENTO: Formulario Manual (CON VALIDACIÓN ESTRICTA) ⭐
+        // ------------------------------------------------------------------
+        formEl.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const dateStr = inputDateEl.value;
+            const timeStr = inputTimeEl.value;
+            const duration = parseInt(document.getElementById('inputDuration').value);
+
+            if (!dateStr || !timeStr) {
+                alert('Por favor, selecciona una fecha y hora.');
+                return;
+            }
+
+            // ⭐️ VALIDACIÓN DE LA CADENA DE HORA ('HH:MM') DIRECTAMENTE ⭐️
+            // Rango: '10:00' (inclusive) hasta antes de '21:00' (exclusivo para hora de inicio)
+            if (timeStr < '10:00' || timeStr > '21:00') {
+                 alert('❌ Error: El horario disponible es solo de 10:00 AM a 9:00 PM (21:00).');
+                 return;
+            }
+
+            // Si la hora es 21:00, solo permite 30 minutos (si quieres ser estricto)
+            if (timeStr === '21:00' && duration > 0) {
+                 // Puedes poner otra validación aquí si la última cita debe terminar antes de las 21:00
+                 // Por ahora, permitimos la cita de 21:00, aunque terminara a las 21:30 (fuera de rango).
+            }
+
+
+            // 1. Crear el objeto Date de inicio (YYYY-MM-DDTHH:MM:00)
+            const startDT = new Date(`${dateStr}T${timeStr}:00`);
+
+            // 2. Calcular el objeto Date de fin (Añadir duración en milisegundos)
+            const endDT = new Date(startDT.getTime() + duration * 60000);
+
+            // 3. Llamar a la función centralizada
+            processAppointment(startDT, endDT);
+        });
+
+
+        // ------------------------------------------------------------------
+        // ⭐ CONFIGURACIÓN DEL CALENDARIO (FullCalendar) ⭐
+        // ------------------------------------------------------------------
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'es',
+            height: 'auto',
+
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+
+            // ⭐️ RESTRICCIÓN DE HORARIO EN VISTAS DE SEMANA/DÍA (SOLUCIÓN VISUAL) ⭐️
+            slotMinTime: '10:00:00', // 10:00 AM
+            slotMaxTime: '21:00:00', // 9:00 PM
+
+            events: '/api/eventos/cargar',
+            selectable: true,
+
+            // Lógica al hacer clic en un día (solo llena el campo de fecha)
+            dateClick: function(info) {
+                // Rellena el campo de fecha del formulario
+                inputDateEl.value = info.dateStr;
+                alert(`Fecha ${info.dateStr} seleccionada. Por favor, elige la hora de inicio en el formulario lateral.`);
+            },
+
+
+            // Lógica al seleccionar un rango en el calendario
+            select: function(info) {
+
+                // Antes de procesar, verifica si la hora de inicio es válida (segunda validación de seguridad)
+                const startHour = info.start.getHours();
+                if (startHour < 10 || startHour >= 21) {
+                    alert('❌ Error: El horario seleccionado está fuera del rango de 10:00 AM a 9:00 PM.');
+                    calendar.unselect();
+                    return;
+                }
+
+                processAppointment(info.start, info.end);
+                calendar.unselect();
+            },
+
+            eventClick: function(info) {
+                if (confirm("¿Deseas ver o cancelar esta cita? (" + info.event.title + ")")) {
+                    info.event.remove();
+                    alert('Cita cancelada.');
+                }
+            }
+        });
+
+        calendar.render();
+    });
+</script>

@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Iniciar Sesión - INSTALACIONES UNIVERSALES</title>
+    </head>
+<body>
+    <header>
+        <h1>Acceso a Clientes y Administradores</h1>
+        <nav>
+            <a href="{% url 'index' %}">Inicio</a> |
+            <a href="{% url 'servicios' %}">Servicios</a> |
+            <a href="{% url 'iniciar_sesion' %}">Iniciar Sesión</a>
+        </nav>
+    </header>
+
+    <section>
+        <h2>🔑 Ingresa a tu Cuenta</h2>
+
+        <form method="post">
+            {% csrf_token %}
+            <label for="username">Usuario:</label><br>
+            <input type="text" id="username" name="username"><br><br>
+
+            <label for="password">Contraseña:</label><br>
+            <input type="password" id="password" name="password"><br><br>
+
+            <button type="submit">Acceder</button>
+        </form>
+
+        <p style="margin-top: 20px;">¿Olvidaste tu contraseña? | ¿Necesitas contactarnos? <a href="{% url 'contacto' %}">Contáctanos</a>.</p>
+    </section>
+
+</body>
+</html>

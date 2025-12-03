@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario de Opiniones</title>
+    <style>
+        /* ================================================= */
+        /* ESTILO AGREGADO PARA EL FONDO DEL CUERPO (BODY) */
+        /* ================================================= */
+        body {
+            background-color: #f0f0f0; /* Un gris muy claro y suave */
+        }
+
+        /* ================================================= */
+        /* CSS del Formulario */
+        /* ================================================= */
+        .opiniones-container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            font-family: Arial, sans-serif;
+        }
+
+        .opiniones-container h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ffc107; /* Color amarillo/naranja similar al botón */
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: #ffc107;
+            outline: none;
+            box-shadow: 0 0 5px rgba(255, 193, 7, 0.5);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #ffc107;
+            color: #333;
+            border: none;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+
+        .btn-submit:hover {
+            background-color: #ff9800;
+        }
+
+        .btn-submit:active {
+            transform: scale(0.99);
+        }
+
+        /* ================================================= */
+        /* CSS para la Visualización de Comentarios (Nuevo) */
+        /* ================================================= */
+
+        .comentarios-publicados-container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 0 30px;
+            font-family: Arial, sans-serif;
+        }
+
+        .comentarios-publicados-container h3 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .comentario-card {
+            border-left: 5px solid #ffc107; /* Línea amarilla de acento */
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #ffffff; /* Se cambia a blanco para contrastar con el fondo gris del body */
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        .comentario-texto {
+            font-style: italic;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .comentario-autor {
+            font-size: 0.9em;
+            color: #555;
+            text-align: right;
+            border-top: 1px dashed #eee;
+            padding-top: 5px;
+        }
+        .comentario-fecha {
+            color: #999;
+            font-size: 0.8em;
+            margin-left: 10px;
+        }
+        .sin-comentarios {
+            text-align: center;
+            color: #888;
+            padding: 20px;
+            border: 1px dashed #ccc;
+        }
+        .btn-inicio-flotante {
+        /* Posicionamiento Fijo */
+        position: fixed;
+        top: 20px; /* Separación de la parte superior */
+        left: 20px; /* Separación de la parte izquierda */
+        z-index: 1000; /* Asegura que esté por encima de otros elementos */
+
+        /* Estilo del Botón */
+        background-color: #333; /* Fondo oscuro */
+        color: #ffffff; /* Texto blanco */
+        padding: 10px 15px;
+        border-radius: 5px;
+        text-decoration: none; /* Quitar el subrayado del enlace */
+        font-weight: bold;
+        font-size: 16px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .btn-inicio-flotante:hover {
+        background-color: #555; /* Oscurece un poco al pasar el ratón */
+        transform: scale(1.05); /* Ligeramente más grande al pasar el ratón */
+        }
+    </style>
+</head>
+<body>
+<a href="/" class="btn-inicio-flotante" title="Volver al Inicio">
+    &larr; Regresar
+</a>
+<div class="opiniones-container">
+    <h2>Escribe tu Opinión</h2>
+
+    <form action="{% url 'opiniones' %}" method="POST">
+      {% csrf_token %}
+
+        <div class="form-group">
+            <label for="nombre">Nombre(s) *</label>
+            <input type="text" id="nombre" name="nombre" placeholder="Ej: Juan" required>
+        </div>
+
+        <div class="form-group">
+            <label for="apellido">Apellido(s) *</label>
+            <input type="text" id="apellido" name="apellido" placeholder="Ej: Pérez" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Correo Electrónico (Opcional)</label>
+            <input type="email" id="email" name="email" placeholder="Ej: correo@ejemplo.com">
+        </div>
+
+        <div class="form-group">
+            <label for="comentario">Tu Comentario *</label>
+            <textarea id="comentario" name="comentario" placeholder="Describe tu experiencia con nuestros servicios..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn-submit">Publicar Comentario</button>
+
+    </form>
+</div>
+<div class="comentarios-publicados-container">
+    <h3>Comentarios Recientes</h3>
+
+    {% for comentario in comentarios %}
+        <div class="comentario-card">
+            <p class="comentario-texto">"{{ comentario.texto_comentario }}"</p>
+            <p class="comentario-autor">
+                <strong>- {{ comentario.nombre }} {{ comentario.apellido }}</strong>
+                <span class="comentario-fecha">({{ comentario.fecha_creacion|date:"d M Y h:i a" }})</span>
+            </p>
+        </div>
+    {% empty %}
+        <p class="sin-comentarios">Sé el primero en dejar un comentario. ¡Tu opinión es importante!</p>
+    {% endfor %}
+    </div>
+
+
+</body>
+</html>

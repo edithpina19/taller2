@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Cuenta</title>
+
+    <style>
+        /*
+         * PARTE 1: ESTILOS DE CENTRADO (BODY)
+         * Estos estilos aseguran que el recuadro del formulario esté
+         * centrado vertical y horizontalmente en toda la ventana del navegador.
+         */
+        body {
+            /* Usar Flexbox para el centrado */
+            display: flex;
+            /* Centrar horizontalmente */
+            justify-content: center;
+            /* Centrar verticalmente */
+            align-items: center;
+            /* Asegurar que el body ocupe al menos toda la altura de la vista */
+            min-height: 100vh;
+            /* Limpiar márgenes por defecto */
+            margin: 0;
+            /* Fondo ligero para contrastar */
+            background-color: #f4f4f9;
+            font-family: Arial, sans-serif;
+        }
+
+        /*
+         * PARTE 2: ESTILOS DEL CONTENEDOR (RECUAUDRO)
+         */
+        .account-creation-container {
+            max-width: 400px;
+            width: 90%; /* Hace que sea responsivo en pantallas pequeñas */
+            padding: 20px 30px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            /* Sombra para darle profundidad de "recuadro" */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            background-color: #ffffff;
+            /* Margin en 0 para permitir que Flexbox lo centre */
+            margin: 0;
+        }
+
+        /* Título principal */
+        .account-creation-container h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        /* Párrafo de obligatorios */
+        .account-creation-container p {
+            text-align: center;
+            color: #777;
+            margin-bottom: 25px;
+            font-size: 0.9em;
+        }
+
+        /* Grupo de cada campo (Label + Input) */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        /* Etiqueta del campo */
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+            font-size: 0.95em;
+        }
+
+        /* Campo de entrada de texto */
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            /* Asegura que el padding no aumente el ancho total del 100% */
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+
+        /* Estilo para el botón de envío */
+        .submit-button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<form action="/registro/" method="POST" class="registration-form">
+    {% csrf_token %}
+    <div class="account-creation-container">
+        <h2>CREAR CUENTA</h2>
+        <p>Los campos marcados con asterisco (*) son obligatorios.</p>
+
+        <form action="/registro/" method="POST" class="registration-form">
+            <div class="form-group">
+                <label for="username">Nombre de Usuario *</label>
+                <input type="text" id="username" name="username" required
+                       placeholder="Mínimo 5 caracteres">
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Celular *</label>
+                <input type="tel" id="phone" name="phone" required
+                       placeholder="Ingresa tu número a 10 dígitos">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Correo Electrónico (Opcional)</label>
+                <input type="email" id="email" name="email"
+                       placeholder="Ej: nombre.apellido@dominio.com">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Contraseña *</label>
+                <input type="password" id="password" name="password" required
+                       placeholder="Mínimo 8 caracteres, incluye mayúsculas y números">
+            </div>
+
+            <button type="submit" class="submit-button">Registrarse</button>
+        </form>
+    </div>
+
+</body>
+</html>

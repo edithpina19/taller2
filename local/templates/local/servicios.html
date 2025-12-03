@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instalaciones Universales - Catálogo de Servicios</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f6f7fb;
+            color: #2d2d2d;
+        }
+
+        /* Estilo para el diseño de 2 columnas (Catálogo + Resumen) */
+        .main-content {
+            display: flex;
+            gap: 30px;
+            width: 95%;
+            margin: 30px auto;
+            max-width: 1400px;
+        }
+
+        .catalogo {
+            flex: 3;
+        }
+
+        /* RECETARIO LATERAL (RESUMEN) */
+        .resumen-carrito {
+            flex: 1;
+            min-width: 280px;
+            max-width: 350px;
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 15px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 30px;
+            height: fit-content;
+            max-height: 80vh;
+            overflow-y: auto;
+            border-top: 4px solid #005bbb;
+        }
+
+        /* ⭐️ REJILLA DE APARATOS */
+        .aparatos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        /* ⭐️ MINI-TARJETA INDIVIDUAL */
+        .service-item {
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: transform 0.2s;
+            border: 1px solid #e3e3e3;
+        }
+
+        .service-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        }
+
+        .service-item img {
+            width: 100%;
+            max-height: 120px;
+            object-fit: contain;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+
+        .service-item strong {
+            display: block;
+            margin-bottom: 15px;
+            font-weight: 700;
+            color: #005bbb;
+            font-size: 16px;
+        }
+
+        /* Controles de Cantidad (Triángulos) */
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .quantity-controls button {
+            background: #005bbb;
+            color: white;
+            border: none;
+            padding: 5px 8px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 18px;
+            line-height: 1;
+            transition: background 0.2s;
+        }
+
+        .quantity-controls button:hover {
+            background: #004a99;
+        }
+
+        .quantity-controls .quantity-display {
+            margin: 0 10px;
+            font-size: 20px;
+            font-weight: 800;
+            width: 25px;
+            text-align: center;
+            color: #2d2d2d;
+        }
+
+        /* Botón SOLICITAR SERVICIO (en tarjeta individual) */
+        .btn-solicitar {
+            display: block;
+            width: 100%;
+            background: #4CAF50;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 700;
+            transition: background 0.25s;
+            font-size: 14px;
+            border: none; /* Asegurar que el botón del formulario no tenga bordes raros */
+            cursor: pointer;
+        }
+
+        .btn-solicitar:hover {
+            background: #3c8e41;
+        }
+
+        .resumen-carrito h3 {
+            margin-top: 0;
+            font-size: 20px;
+            font-weight: 800;
+            color: #005bbb;
+            border-bottom: 2px solid #e3e3e3;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .resumen-carrito ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .resumen-carrito li {
+            margin-bottom: 8px;
+            padding: 10px;
+            background: #e3f2fd;
+            border-radius: 6px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 15px;
+        }
+
+        .resumen-carrito .cantidad {
+            color: #005bbb;
+            font-size: 1.1em;
+            font-weight: 800;
+            padding-left: 10px;
+        }
+
+        /* Estilos de títulos y pie de página */
+        .section-title {
+            font-size: 32px;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 15px;
+            color: #2d2d2d;
+            text-transform: uppercase;
+        }
+
+        /* Nuevo estilo para el botón SOLICITAR AHORA (Submit principal) */
+        .btn-solicitar-ahora {
+            display: block;
+            width: calc(100% - 20px);
+            margin: 20px auto 10px auto;
+            background: #005bbb;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 700;
+            transition: background 0.25s;
+            font-size: 16px;
+            box-sizing: border-box;
+            border: none; /* Es un botón de formulario */
+            cursor: pointer;
+        }
+
+        .btn-solicitar-ahora:hover {
+            background: #004a99;
+        }
+
+        /* Ajuste para el botón de WhatsApp (color verde) */
+        #whatsapp-button {
+            display: block;
+            width: calc(100% - 20px);
+            margin: 0px auto;
+            font-size: 16px;
+            padding: 12px;
+            background: #25D366;
+            box-sizing: border-box;
+            text-decoration: none;
+            color: white;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 700;
+            transition: background 0.25s;
+        }
+
+        #whatsapp-button:hover {
+            background: #1eac54;
+        }
+
+        .btn-inicio-flotante {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background-color: #333;
+            color: #ffffff;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .btn-inicio-flotante:hover {
+            background-color: #555;
+            transform: scale(1.05);
+        }
+
+        footer {
+            margin-top: 50px;
+            background: #e9ecef;
+            padding: 15px;
+            text-align: center;
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
+</head>
+
+<body>
+<a href="{% url 'index' %}" class="btn-inicio-flotante" title="Volver al Inicio">
+    &larr; Regresar
+</a>
+
+<div class="main-content">
+    <div class="catalogo">
+        <h2 class="section-title">CATÁLOGO DE SERVICIOS POR APARATO</h2>
+        <p style="text-align: center; margin-bottom: 30px; font-size: 1.1em;">
+            Selecciona la cantidad de cada tipo de aparato electrónico o electrodoméstico que deseas reparar.
+        </p>
+
+        <div class="aparatos-grid">
+
+            <div class="service-item" data-code="Televisor LED/PLASMA">
+                <img src="/static/img/Televisores.png" alt="Televisor LED/PLASMA">
+                <strong>Televisor LED/PLASMA</strong>
+                <div class="quantity-controls">
+                    <button onclick="changeQuantity('Televisor LED/PLASMA', -1)"><i class="fas fa-caret-down"></i></button>
+                    <span class="quantity-display" id="qty-Televisor LED/PLASMA">0</span>
+                    <button onclick="changeQuantity('Televisor LED/PLASMA', 1)"><i class="fas fa-caret-up"></i></button>
+                </div>
+
+                <form id="form-Televisor LED/PLASMA" action="{% url 'agregar_servicio' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="aparato_code" value="Televisor LED/PLASMA">
+                    <input type="hidden" name="cantidad" id="input-Televisor LED/PLASMA" value="0">
+                    <button type="submit" class="btn-solicitar" onclick="return validateAndSubmit('Televisor LED/PLASMA')">Solicitar Servicio</button>
+                </form>
+            </div>
+
+            <div class="service-item" data-code="Home Theater">
+                <img src="/static/img/Home Theater.png" alt="Home Theater">
+                <strong>Home Theater</strong>
+                <div class="quantity-controls">
+                    <button onclick="changeQuantity('Home Theater', -1)"><i class="fas fa-caret-down"></i></button>
+                    <span class="quantity-display" id="qty-Home Theater">0</span>
+                    <button onclick="changeQuantity('Home Theater', 1)"><i class="fas fa-caret-up"></i></button>
+                </div>
+
+                <form id="form-Home Theater" action="{% url 'agregar_servicio' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="aparato_code" value="Home Theater">
+                    <input type="hidden" name="cantidad" id="input-Home Theater" value="0">
+                    <button type="submit" class="btn-solicitar" onclick="return validateAndSubmit('Home Theater')">Solicitar Servicio</button>
+                </form>
+            </div>
+
+            <div class="service-item" data-code="Bocinas">
+                <img src="/static/img/Bocinas.png" alt="Bocinas / Altavoces">
+                <strong>Bocinas / Altavoces</strong>
+                <div class="quantity-controls">
+                    <button onclick="changeQuantity('Bocinas', -1)"><i class="fas fa-caret-down"></i></button>
+                    <span class="quantity-display" id="qty-Bocinas">0</span>
+                    <button onclick="changeQuantity('Bocinas', 1)"><i class="fas fa-caret-up"></i></button>
+                </div>
+
+                <form id="form-Bocinas" action="{% url 'agregar_servicio' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="aparato_code" value="Bocinas">
+                    <input type="hidden" name="cantidad" id="input-Bocinas" value="0">
+                    <button type="submit" class="btn-solicitar" onclick="return validateAndSubmit('Bocinas')">Solicitar Servicio</button>
+                </form>
+            </div>
+
+            <div class="service-item" data-code="Amplificadores">
+                <img src="/static/img/Amplificadores.png" alt="Amplificadores">
+                <strong>Amplificadores</strong>
+                <div class="quantity-controls">
+                    <button onclick="changeQuantity('Amplificadores', -1)"><i class="fas fa-caret-down"></i></button>
+                    <span class="quantity-display" id="qty-Amplificadores">0</span>
+                    <button onclick="changeQuantity('Amplificadores', 1)"><i class="fas fa-caret-up"></i></button>
+                </div>
+                <form id="form-Amplificadores" action="{% url 'agregar_servicio' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="aparato_code" value="Amplificadores">
+                    <input type="hidden" name="cantidad" id="input-Amplificadores" value="0">
+                    <button type="submit" class="btn-solicitar" onclick="return validateAndSubmit('Amplificadores')">Solicitar Servicio</button>
+                </form>
+            </div>
+
+            <div class="service-item" data-code="Equipo de Estéreo">
+                <img src="/static/img/Estéreo.png" alt="Equipo de Estéreo">
+                <strong>Equipo de Estéreo</strong>
+                <div class="quantity-controls">
+                    <button onclick="changeQuantity('Equipo de Estéreo', -1)"><i class="fas fa-caret-down"></i></button>
+                    <span class="quantity-display" id="qty-Equipo de Estéreo">0</span>
+                    <button onclick="changeQuantity('Equipo de Estéreo', 1)"><i class="fas fa-caret-up"></i></button>
+                </div>
+                <form id="form-Equipo de Estéreo" action="{% url 'agregar_servicio' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="aparato_code" value="Equipo de Estéreo">
+                    <input type="hidden" name="cantidad" id="input-Equipo de Estéreo" value="0">
+                    <button type="submit" class="btn-solicitar" onclick="return validateAndSubmit('Equipo de Estéreo')">Solicitar Servicio</button>
+                </form>
+            </div>
+
+            <div class="service-item" data-code="Microondas">
+                <img src="/static/img/Microondas.png" alt="Microondas">
+                <strong>Microondas</strong>
+                <div class="quantity-controls">
+                    <button onclick="changeQuantity('Microondas', -1)"><i class="fas fa-caret-down"></i></button>
+                    <span class="quantity-display" id="qty-Microondas">0</span>
+                    <button onclick="changeQuantity('Microondas', 1)"><i class="fas fa-caret-up"></i></button>
+                </div>
+                <form id="form-Microondas" action="{% url 'agregar_servicio' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="aparato_code" value="Microondas">
+                    <input type="hidden" name="cantidad" id="input-Microondas" value="0">
+                    <button type="submit" class="btn-solicitar" onclick="return validateAndSubmit('Microondas')">Solicitar Servicio</button>
+                </form>
+            </div>
+
+            <div class="service-item" data-code="Hornos">
+                <img src="/static/img/Hornos.png" alt="Hornos">
+                <strong>Hornos</strong>
+                <div class="quantity-controls">
+                    <button onclick="changeQuantity('Hornos', -1)"><i class="fas fa-caret-down"></i></button>
+                    <span class="quantity-display" id="qty-Hornos">0</span>
+                    <button onclick="changeQuantity('Hornos', 1)"><i class="fas fa-caret-up"></i></button>
+                </div>
+                <form id="form-Hornos" action="{% url 'agregar_servicio' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="aparato_code" value="Hornos">
+                    <input type="hidden" name="cantidad" id="input-Hornos" value="0">
+                    <button type="submit" class="btn-solicitar" onclick="return validateAndSubmit('Hornos')">Solicitar Servicio</button>
+                </form>
+            </div>
+
+            <div class="service-item" data-code="Licuadoras">
+                <img src="/static/img/Licuadoras.png" alt="Licuadoras">
+                <strong>Licuadoras</strong>
+                <div class="quantity-controls">
+                    <button onclick="changeQuantity('Licuadoras', -1)"><i class="fas fa-caret-down"></i></button>
+                    <span class="quantity-display" id="qty-Licuadoras">0</span> <button onclick="changeQuantity('Licuadoras', 1)"><i class="fas fa-caret-up"></i></button>
+                </div>
+                <form id="form-Licuadoras" action="{% url 'agregar_servicio' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="aparato_code" value="Licuadoras">
+                    <input type="hidden" name="cantidad" id="input-Licuadoras" value="0">
+                    <button type="submit" class="btn-solicitar" onclick="return validateAndSubmit('Licuadoras')">Solicitar Servicio</button>
+                </form>
+            </div>
+
+            <div class="service-item" data-code="Batidoras">
+                <img src="/static/img/Batidoras.png" alt="Batidoras">
+                <strong>Batidoras</strong>
+                <div class="quantity-controls">
+                    <button onclick="changeQuantity('Batidoras', -1)"><i class="fas fa-caret-down"></i></button>
+                    <span class="quantity-display" id="qty-Batidoras">0</span> <button onclick="changeQuantity('Batidoras', 1)"><i class="fas fa-caret-up"></i></button>
+                </div>
+                <form id="form-Batidoras" action="{% url 'agregar_servicio' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="aparato_code" value="Batidoras">
+                    <input type="hidden" name="cantidad" id="input-Batidoras" value="0">
+                    <button type="submit" class="btn-solicitar" onclick="return validateAndSubmit('Batidoras')">Solicitar Servicio</button>
+                </form>
+            </div>
+
+            <div class="service-item" data-code="Tostadoras">
+                <img src="/static/img/Tostadoras.png" alt="Tostadoras">
+                <strong>Tostadoras</strong>
+                <div class="quantity-controls">
+                    <button onclick="changeQuantity('Tostadoras', -1)"><i class="fas fa-caret-down"></i></button>
+                    <span class="quantity-display" id="qty-Tostadoras">0</span>
+                    <button onclick="changeQuantity('Tostadoras', 1)"><i class="fas fa-caret-up"></i></button>
+                </div>
+                <form id="form-Tostadoras" action="{% url 'agregar_servicio' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="aparato_code" value="Tostadoras">
+                    <input type="hidden" name="cantidad" id="input-Tostadoras" value="0">
+                    <button type="submit" class="btn-solicitar" onclick="return validateAndSubmit('Tostadoras')">Solicitar Servicio</button>
+                </form>
+            </div>
+
+            <div class="service-item" data-code="Ventiladores">
+                <img src="/static/img/ventiladores.png" alt="Ventiladores">
+                <strong>Ventiladores</strong>
+                <div class="quantity-controls">
+                    <button onclick="changeQuantity('Ventiladores', -1)"><i class="fas fa-caret-down"></i></button>
+                    <span class="quantity-display" id="qty-Ventiladores">0</span>
+                    <button onclick="changeQuantity('Ventiladores', 1)"><i class="fas fa-caret-up"></i></button>
+                </div>
+                <form id="form-Ventiladores" action="{% url 'agregar_servicio' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="aparato_code" value="Ventiladores">
+                    <input type="hidden" name="cantidad" id="input-Ventiladores" value="0">
+                    <button type="submit" class="btn-solicitar" onclick="return validateAndSubmit('Ventiladores')">Solicitar Servicio</button>
+                </form>
+            </div>
+
+            <div class="service-item" data-code="Planchas de Ropa">
+                <img src="/static/img/planchas.png" alt="Planchas de Ropa">
+                <strong>Planchas de Ropa</strong>
+                <div class="quantity-controls">
+                    <button onclick="changeQuantity('Planchas de Ropa', -1)"><i class="fas fa-caret-down"></i></button>
+                    <span class="quantity-display" id="qty-Planchas de Ropa">0</span>
+                    <button onclick="changeQuantity('Planchas de Ropa', 1)"><i class="fas fa-caret-up"></i></button>
+                </div>
+                <form id="form-Planchas de Ropa" action="{% url 'agregar_servicio' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="aparato_code" value="Planchas de Ropa">
+                    <input type="hidden" name="cantidad" id="input-Planchas de Ropa" value="0">
+                    <button type="submit" class="btn-solicitar" onclick="return validateAndSubmit('Planchas de Ropa')">Solicitar Servicio</button>
+                </form>
+            </div>
+
+            <div class="service-item" data-code="Secadora de Pelo">
+                <img src="/static/img/secadora.png" alt="Secadora de Pelo">
+                <strong>Secadora de Pelo</strong>
+                <div class="quantity-controls">
+                    <button onclick="changeQuantity('Secadora de Pelo', -1)"><i class="fas fa-caret-down"></i></button>
+                    <span class="quantity-display" id="qty-Secadora de Pelo">0</span>
+                    <button onclick="changeQuantity('Secadora de Pelo', 1)"><i class="fas fa-caret-up"></i></button>
+                </div>
+                <form id="form-Secadora de Pelo" action="{% url 'agregar_servicio' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="aparato_code" value="Secadora de Pelo">
+                    <input type="hidden" name="cantidad" id="input-Secadora de Pelo" value="0">
+                    <button type="submit" class="btn-solicitar" onclick="return validateAndSubmit('Secadora de Pelo')">Solicitar Servicio</button>
+                </form>
+            </div>
+
+            <div class="service-item" data-code="Plancha de Cabello">
+                <img src="/static/img/plancha de cabello.png" alt="Plancha de Cabello">
+                <strong>Plancha de Cabello</strong>
+                <div class="quantity-controls">
+                    <button onclick="changeQuantity('Plancha de Cabello', -1)"><i class="fas fa-caret-down"></i></button>
+                    <span class="quantity-display" id="qty-Plancha de Cabello">0</span>
+                    <button onclick="changeQuantity('Plancha de Cabello', 1)"><i class="fas fa-caret-up"></i></button>
+                </div>
+                <form id="form-Plancha de Cabello" action="{% url 'agregar_servicio' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="aparato_code" value="Plancha de Cabello">
+                    <input type="hidden" name="cantidad" id="input-Plancha de Cabello" value="0">
+                    <button type="submit" class="btn-solicitar" onclick="return validateAndSubmit('Plancha de Cabello')">Solicitar Servicio</button>
+                </form>
+            </div>
+
+            <div class="service-item" data-code="Rizador de Cabello">
+                <img src="/static/img/rizador de cabello.png" alt="Rizador de Cabello">
+                <strong>Rizador de Cabello</strong>
+                <div class="quantity-controls">
+                    <button onclick="changeQuantity('Rizador de Cabello', -1)"><i class="fas fa-caret-down"></i></button>
+                    <span class="quantity-display" id="qty-Rizador de Cabello">0</span>
+                    <button onclick="changeQuantity('Rizador de Cabello', 1)"><i class="fas fa-caret-up"></i></button>
+                </div>
+                <form id="form-Rizador de Cabello" action="{% url 'agregar_servicio' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="aparato_code" value="Rizador de Cabello">
+                    <input type="hidden" name="cantidad" id="input-Rizador de Cabello" value="0">
+                    <button type="submit" class="btn-solicitar" onclick="return validateAndSubmit('Rizador de Cabello')">Solicitar Servicio</button>
+                </form>
+            </div>
+
+            </div>
+
+    </div>
+
+<div class="resumen-carrito">
+    <h3>🛒 Resumen de Solicitud</h3>
+    <ul id="selected-services-list">
+        <li id="empty-cart-message">No has seleccionado ningún aparato.</li>
+    </ul>
+
+    <button type="button" class="btn-solicitar-ahora" id="submit-all-button" onclick="submitAllServices(event)">
+        <i class="fas fa-paper-plane"></i> SOLICITAR TODOS AHORA
+    </button>
+    <a class="btn-solicitar" id="whatsapp-button" href="#" onclick="generateWhatsAppLink(event)">
+        <i class="fab fa-whatsapp"></i> MANDAR DIRECTAMENTE A WHATSAPP
+    </a>
+
+    <p style="font-size: 0.8em; text-align: center; margin-top: 10px; color: #777;">
+        <span id="total-items">0</span> aparato(s) seleccionado(s).
+    </p>
+    <p style="font-size: 0.8em; text-align: center; color: #777;">
+        (El botón **Solicitar Todos Ahora** enviará todos los ítems seleccionados al Admin de una sola vez).
+    </p>
+</div>
+
+<form id="mass-submission-form" action="{% url 'agregar_servicios_masivo' %}" method="post" style="display: none;">
+    {% csrf_token %}
+    </form>
+
+<footer>
+    © 2025 INSTALACIONES UNIVERSALES
+</footer>
+
+<script>
+    // Objeto para almacenar la cantidad de cada servicio seleccionado.
+    // Inicializado con un objeto vacío y luego poblado en DOMContentLoaded
+    const selectedServices = {};
+    const DESTINATION_PHONE = '528991144132';
+
+    // Mapeo de códigos cortos a nombres completos para el resumen visual y WhatsApp
+    const serviceNameMap = {
+        'Televisor LED/PLASMA': 'Televisor LED/PLASMA',
+        'Home Theater': 'Home Theater',
+        'Bocinas': 'Bocinas / Altavoces', // Usar el código corto como clave
+        'Amplificadores': 'Amplificadores',
+        'Equipo de Estéreo': 'Equipo de Estéreo',
+        'Microondas': 'Microondas',
+        'Hornos': 'Hornos',
+        'Licuadoras': 'Licuadoras',
+        'Batidoras': 'Batidoras',
+        'Tostadoras': 'Tostadoras',
+        'Ventiladores': 'Ventiladores',
+        'Planchas de Ropa': 'Planchas de Ropa',
+        'Secadora de Pelo': 'Secadora de Pelo',
+        'Plancha de Cabello': 'Plancha de Cabello',
+        'Rizador de Cabello': 'Rizador de Cabello'
+    };
+
+
+    // Función principal para cambiar la cantidad de un servicio
+    function changeQuantity(serviceCode, change) {
+        let currentQty = selectedServices[serviceCode] || 0;
+        let newQty = Math.max(0, currentQty + change);
+        selectedServices[serviceCode] = newQty;
+
+        // 1. Actualiza el display de cantidad en el catálogo (visual)
+        const qtyDisplayElement = document.getElementById(`qty-${serviceCode}`);
+        if (qtyDisplayElement) {
+            qtyDisplayElement.textContent = newQty;
+        }
+
+        // 2. Actualiza el input oculto del formulario (para enviar al backend)
+        const inputElement = document.getElementById(`input-${serviceCode}`);
+        if (inputElement) {
+            inputElement.value = newQty;
+        }
+
+        // 3. Actualiza el recuadro de resumen/carrito
+        updateServiceSummary();
+    }
+
+    // Función que se ejecuta al hacer clic en el botón 'Solicitar Servicio' de cada tarjeta
+    function validateAndSubmit(serviceCode) {
+        // Asegúrate de usar la cantidad del objeto global, o del input
+        const quantity = parseInt(document.getElementById(`input-${serviceCode}`).value, 10);
+
+        if (quantity === 0) {
+            alert("Por favor, selecciona una cantidad mayor a cero para solicitar este servicio.");
+            return false; // Previene el envío del formulario
+        }
+
+        // Muestra un mensaje de confirmación antes del envío real a Django/Admin
+        const confirmSend = confirm(`¿Estás seguro que deseas enviar ${quantity} ${serviceNameMap[serviceCode] || serviceCode} para registro en Admin?`);
+
+        if (confirmSend) {
+            // El formulario se envía al backend de Django para su registro en Admin.
+            // La vista 'agregar_servicio' debe manejar la lógica de guardado y redirigir.
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // Función para actualizar el recuadro lateral con el resumen
+    function updateServiceSummary() {
+        const listElement = document.getElementById('selected-services-list');
+        const totalItemsElement = document.getElementById('total-items');
+        let emptyMessageElement = document.getElementById('empty-cart-message');
+
+        listElement.innerHTML = '';
+        let totalItems = 0;
+        let itemsCount = 0;
+
+        for (const [code, quantity] of Object.entries(selectedServices)) {
+            // Se usa parseInt para asegurar que la cantidad sea un número
+            const qty = parseInt(quantity, 10);
+            if (qty > 0) {
+                const listItem = document.createElement('li');
+                // Usamos serviceNameMap[code] para obtener el nombre largo si es necesario, si no, usamos el código
+                const displayName = serviceNameMap[code] || code;
+                listItem.innerHTML = `
+                    <span>${displayName}</span>
+                    <span class="cantidad">-${qty}-</span>
+                `;
+                listElement.appendChild(listItem);
+                totalItems += qty;
+                itemsCount++;
+            }
+        }
+
+        // Si no hay items, muestra el mensaje de carrito vacío
+        if (itemsCount === 0) {
+            if (!emptyMessageElement) {
+                emptyMessageElement = document.createElement('li');
+                emptyMessageElement.id = 'empty-cart-message';
+                emptyMessageElement.textContent = 'No has seleccionado ningún aparato.';
+                emptyMessageElement.style.background = '#f1f1f1';
+                emptyMessageElement.style.color = '#777';
+                emptyMessageElement.style.justifyContent = 'center';
+            }
+            emptyMessageElement.style.display = 'flex';
+            listElement.appendChild(emptyMessageElement);
+        } else {
+            // Si existe el mensaje, ocúltalo si hay items
+            if (emptyMessageElement) {
+                emptyMessageElement.style.display = 'none';
+            }
+        }
+
+        totalItemsElement.textContent = totalItems;
+    }
+
+    // **NUEVA FUNCIÓN:** Inicializa las cantidades al cargar la página.
+    function initializeQuantities() {
+        // Itera sobre todos los códigos definidos para inicializar `selectedServices`
+        for (const code in serviceNameMap) {
+            // Buscamos el input oculto por su ID: input-[nombre-del-aparato]
+            const inputElement = document.getElementById(`input-${code}`);
+            if (inputElement) {
+                 // Usamos el valor del input, o '0' si no tiene valor
+                const initialQty = parseInt(inputElement.value || '0', 10);
+                selectedServices[code] = initialQty;
+
+                // También actualizamos el span de cantidad (qty-)
+                const qtyDisplayElement = document.getElementById(`qty-${code}`);
+                if (qtyDisplayElement) {
+                    qtyDisplayElement.textContent = initialQty;
+                }
+            } else {
+                // Si el input no existe, inicializamos a 0
+                 selectedServices[code] = 0;
+            }
+        }
+        updateServiceSummary();
+    }
+
+    // Función para el envío masivo de SOLICITAR TODOS AHORA
+    function submitAllServices(event) {
+        event.preventDefault();
+
+        const itemsToSend = [];
+        let totalQty = 0;
+
+        // 1. Recolectar solo los servicios con cantidad > 0
+        for (const [code, quantity] of Object.entries(selectedServices)) {
+            const qty = parseInt(quantity, 10);
+            if (qty > 0) {
+                itemsToSend.push({
+                    code: code,
+                    qty: qty
+                });
+                totalQty += qty;
+            }
+        }
+
+        if (itemsToSend.length === 0) {
+            alert("Por favor, selecciona al menos un aparato para realizar el envío masivo.");
+            return;
+        }
+
+        const confirmSend = confirm(`¿Deseas enviar ${totalQty} aparatos de ${itemsToSend.length} tipo(s) de servicio al Admin?`);
+
+        if (!confirmSend) {
+            return;
+        }
+
+        // 2. Preparar el formulario oculto para el envío (lo que estaba fallando)
+        const form = document.getElementById('mass-submission-form');
+        const csrfToken = form.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+        // Limpiar y llenar el formulario invisible con los datos
+        form.innerHTML = '';
+
+        // Agregar el token CSRF de nuevo
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = 'csrfmiddlewaretoken';
+        csrfInput.value = csrfToken;
+        form.appendChild(csrfInput);
+
+        // Agregar los datos de los aparatos.
+        itemsToSend.forEach((item, index) => {
+            const codeInput = document.createElement('input');
+            codeInput.type = 'hidden';
+            codeInput.name = `item_${index}_code`;
+            codeInput.value = item.code;
+            form.appendChild(codeInput);
+
+            const qtyInput = document.createElement('input');
+            qtyInput.type = 'hidden';
+            qtyInput.name = `item_${index}_qty`;
+            qtyInput.value = item.qty;
+            form.appendChild(qtyInput);
+        });
+
+        // ⭐️ ESTA LÍNEA ES CRÍTICA: Resuelve el NameError en Django ⭐️
+        const countInput = document.createElement('input');
+        countInput.type = 'hidden';
+        countInput.name = 'total_items_count';
+        countInput.value = itemsToSend.length;
+        form.appendChild(countInput);
+
+        // 3. Enviar el formulario a la vista de Django
+        form.submit();
+    }
+
+    // Función para generar el enlace de WhatsApp
+    function generateWhatsAppLink(event) {
+        event.preventDefault();
+
+        let message = "¡Hola! Estoy interesado en solicitar servicio para los siguientes aparatos:\n\n";
+        let itemsCount = 0;
+
+        for (const [code, quantity] of Object.entries(selectedServices)) {
+            const qty = parseInt(quantity, 10);
+            if (qty > 0) {
+                // Usamos serviceNameMap para el nombre en el mensaje de WhatsApp
+                message += `*${qty}* x ${serviceNameMap[code] || code}\n`;
+                itemsCount++;
+            }
+        }
+
+        if (itemsCount === 0) {
+            alert("Por favor, selecciona al menos un aparato para solicitar el servicio.");
+            return;
+        }
+
+        message += "\nPor favor, envíenme una cotización o confirmen los siguientes pasos. ¡Gracias!";
+
+        const encodedMessage = encodeURIComponent(message);
+        const whatsappURL = `https://wa.me/${DESTINATION_PHONE}?text=${encodedMessage}`;
+
+        window.open(whatsappURL, '_blank');
+    }
+
+    // ⭐️ INICIALIZACIÓN: Se asegura de que todo el script se ejecute al cargar el DOM ⭐️
+    document.addEventListener('DOMContentLoaded', initializeQuantities);
+</script>
+
+</body>
+</html>

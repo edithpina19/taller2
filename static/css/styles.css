@@ -1,0 +1,183 @@
+/*--------------------------------------------------------------------
+| ESTILO MODERNO PARA LA PÁGINA DE SERVICIOS
+--------------------------------------------------------------------*/
+body.servicios-page {
+    font-family: 'Inter', system-ui, sans-serif;
+    line-height: 1.7;
+    background: linear-gradient(to bottom right, #eef2ff, #f8fafc);
+    color: #1e293b;
+    padding-bottom: 40px;
+}
+
+.text-center { text-align: center; }
+
+/*--------------------------------------------------------------------
+| CONTENEDOR PRINCIPAL
+--------------------------------------------------------------------*/
+.contenedor-principal {
+    max-width: 1200px;
+    margin: 50px auto;
+    padding: 0 25px;
+    animation: fadeIn 0.7s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/*--------------------------------------------------------------------
+| TÍTULOS Y DESCRIPCIÓN
+--------------------------------------------------------------------*/
+.seccion-servicios-principal h2 {
+    color: #0f172a;
+    font-size: 2.8em;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 15px;
+}
+
+.intro-p {
+    font-size: 1.2em;
+    color: #475569;
+    max-width: 700px;
+    margin: 0 auto 50px auto;
+}
+
+/*--------------------------------------------------------------------
+| TARJETAS DE SERVICIOS
+--------------------------------------------------------------------*/
+.cajas-grid-servicios {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 35px;
+}
+
+.caja-servicio {
+    background: white;
+    border-radius: 18px;
+    padding: 30px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(0,0,0,0.05);
+
+    box-shadow:
+        6px 6px 18px rgba(0,0,0,0.08),
+        -6px -6px 18px rgba(255,255,255,0.8);
+
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.caja-servicio:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow:
+        10px 10px 25px rgba(0,0,0,0.12),
+        -6px -6px 18px rgba(255,255,255,0.9);
+}
+
+.caja-servicio h3 {
+    font-size: 1.7em;
+    font-weight: 700;
+    color: #1e40af;
+    margin-bottom: 20px;
+}
+
+/* LISTA */
+.caja-servicio ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 30px;
+    flex-grow: 1;
+}
+
+.caja-servicio ul li {
+    padding-left: 30px;
+    position: relative;
+    margin-bottom: 12px;
+    font-size: 1.05em;
+    color: #334155;
+    line-height: 1.5;
+}
+
+.caja-servicio ul li::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background: #3b82f6;
+    position: absolute;
+    left: 8px;
+    top: 8px;
+    border-radius: 50%;
+    box-shadow: 0 0 6px rgba(59,130,246,0.5);
+}
+
+/*--------------------------------------------------------------------
+| BOTONES
+--------------------------------------------------------------------*/
+.btn-servicio {
+    display: block;
+    width: 100%;
+    padding: 14px 0;
+    text-align: center;
+    border-radius: 10px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    text-decoration: none;
+    transition: 0.3s ease;
+    margin-top: auto;
+}
+
+/* PRIMARIO */
+.btn-primary {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    box-shadow: 0 4px 12px rgba(59,130,246,0.4);
+}
+.btn-primary:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+}
+
+/* SECUNDARIO */
+.btn-secondary {
+    background: white;
+    color: #2563eb;
+    border: 2px solid #2563eb;
+}
+.btn-secondary:hover {
+    background: #eef2ff;
+    color: #1e3a8a;
+}
+
+/*--------------------------------------------------------------------
+| CAJA DE GARANTÍA
+--------------------------------------------------------------------*/
+.warranty-box {
+    text-align: center;
+    background: #ecfdf5;
+    border: none;
+    border-radius: 15px;
+    padding: 35px;
+    margin-top: 70px;
+    box-shadow: 0 8px 20px rgba(16,185,129,0.15);
+}
+
+.warranty-box h4 {
+    color: #059669;
+    font-size: 1.7em;
+    font-weight: 700;
+}
+
+/*--------------------------------------------------------------------
+| RESPONSIVE
+--------------------------------------------------------------------*/
+@media (max-width: 768px) {
+    .seccion-servicios-principal h2 {
+        font-size: 2.2em;
+    }
+
+    .caja-servicio {
+        padding: 25px;
+    }
+}

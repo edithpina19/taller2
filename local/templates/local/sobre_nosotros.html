@@ -1,0 +1,242 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Sobre Nosotros - Instalaciones Universales</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #000;
+            padding: 20px;
+            text-align: center;
+            color: white;
+            font-size: 24px;
+            letter-spacing: 2px;
+        }
+
+        .contenedor {
+            max-width: 1100px;
+            margin: 40px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        h1 {
+            text-align: center;
+            color: #d4a017;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .linea {
+            width: 120px;
+            height: 4px;
+            background: #d4a017;
+            margin: 0 auto 40px auto;
+            border-radius: 2px;
+        }
+
+        .seccion {
+            margin-bottom: 40px;
+        }
+
+        .seccion h2 {
+            color: #333;
+            font-size: 26px;
+            margin-bottom: 10px;
+        }
+
+        .seccion p {
+            color: #555;
+            line-height: 1.7;
+            font-size: 17px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .card {
+            background: #fafafa;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .card h3 {
+            color: #d4a017;
+            margin-bottom: 10px;
+            font-size: 22px;
+        }
+
+        .card p {
+            color: #444;
+        }
+
+        .equipo {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .miembro {
+            text-align: center;
+            flex: 1;
+        }
+
+        .miembro img {
+            width: 120px;
+            height: 120px;
+            border-radius: 100%;
+            object-fit: cover;
+            border: 4px solid #d4a017;
+        }
+
+        .miembro h4 {
+            margin-top: 10px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .boton-volver {
+            display: block;
+            width: 200px;
+            margin: 40px auto 0;
+            background-color: #d4a017;
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-size: 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .boton-volver:hover {
+            background-color: #f1b826;
+        }
+        .btn-regresar {
+    display: inline-block;
+    padding: 8px 15px;
+    background-color: #2b2b2b; /* Negro grisáceo */
+    color: white;
+    font-size: 15px;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: 0.2s ease-in-out;
+}
+
+.btn-regresar:hover {
+    background-color: #000000; /* Más oscuro al pasar el mouse */
+    transform: translateX(-2px); /* Se mueve poquito hacia la izquierda */
+}
+
+    </style>
+</head>
+<body>
+
+    <header>
+        INSTALACIONES UNIVERSALES
+    </header>
+<a href="javascript:history.back()" class="btn-regresar">
+    &larr; Regresar
+</a>
+    <div class="contenedor">
+
+        <h1>Sobre Nosotros</h1>
+        <div class="linea"></div>
+
+        <!-- QUIENES SOMOS -->
+        <div class="seccion">
+            <h2>¿Quiénes somos?</h2>
+            <p>
+                Instalaciones Universales es una empresa con más de dos décadas de experiencia en el sector
+                de instalación, reparación y mantenimiento de equipos electrónicos. Fundada en el año 2001,
+                nos hemos consolidado como una opción confiable, profesional y accesible para miles de clientes.
+            </p>
+            <p>
+                Nuestro compromiso es brindar un servicio honesto, rápido y de calidad, siempre adaptándonos
+                a las necesidades tecnológicas modernas.
+            </p>
+        </div>
+
+        <!-- NUESTRA HISTORIA -->
+        <div class="seccion">
+            <h2>Nuestra historia</h2>
+            <p>
+                Desde nuestros inicios como un pequeño taller local, hemos crecido hasta convertirnos en una
+                referencia en la región. La confianza de nuestros clientes y la constante actualización en nuevas
+                tecnologías han sido la clave de nuestro crecimiento.
+            </p>
+        </div>
+
+        <!-- VALORES Y MISION -->
+        <div class="grid">
+
+            <div class="card">
+                <h3>Misión</h3>
+                <p>
+                    Ofrecer soluciones profesionales en instalación y reparación de equipos electrónicos, brindando
+                    confianza, seguridad y calidad en cada servicio.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>Visión</h3>
+                <p>
+                    Ser la empresa líder en servicios técnicos electrónicos en la región, reconocida por su excelencia,
+                    ética y atención personalizada.
+                </p>
+            </div>
+
+        </div>
+
+        <!-- VALORES -->
+        <div class="seccion">
+            <h2>Valores que nos distinguen</h2>
+            <div class="card">
+                <p>✔ Profesionalismo</p>
+                <p>✔ Honestidad con cada cliente</p>
+                <p>✔ Trabajo garantizado</p>
+                <p>✔ Atención personalizada</p>
+                <p>✔ Responsabilidad y puntualidad</p>
+            </div>
+        </div>
+
+        <!-- EQUIPO -->
+        <div class="seccion">
+            <h2>Conoce a nuestro equipo</h2>
+            <div class="equipo">
+
+                <div class="miembro">
+<img src="{% static 'img/persona1.png' %}" alt="personal" class="local-image-direct">                    <h4>Técnico Especialista</h4>
+                    <p>20+ años de experiencia</p>
+                </div>
+
+                <div class="miembro">
+<img src="{% static 'img/persona2.png' %}" alt="personal" class="local-image-direct">                    <h4>Instalador Profesional</h4>
+                    <p>Experto en sistemas electrónicos</p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- BOTÓN VOLVER -->
+        <a href="/" class="boton-volver">Volver al inicio</a>
+
+    </div>
+
+</body>
+</html>

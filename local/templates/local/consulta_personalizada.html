@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Consulta Personalizada - INSTALACIONES UNIVERSALES</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+    <style>
+        /* ================================================= */
+        /* ESTILO BÁSICO */
+        /* ================================================= */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #000;
+            text-align: center;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        fieldset {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 6px;
+        }
+        legend {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .form-field {
+            flex: 1 1 45%;
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        input[type="text"], textarea {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        textarea {
+            resize: vertical;
+        }
+        .button-container {
+            text-align: center;
+        }
+        button[type="submit"] {
+            background-color: #008000;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            text-transform: uppercase;
+        }
+.btn-regresar {
+    display: inline-block;
+    padding: 8px 15px;
+    background-color: #2b2b2b; /* Negro grisáceo */
+    color: white;
+    font-size: 15px;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: 0.2s ease-in-out;
+}
+
+.btn-regresar:hover {
+    background-color: #000000; /* Más oscuro al pasar el mouse */
+    transform: translateX(-2px); /* Se mueve poquito hacia la izquierda */
+}
+
+
+    </style>
+</head>
+
+<body>
+
+
+<a href="javascript:history.back()" class="btn-regresar">
+    &larr; Regresar
+</a>
+
+<div class="container">
+    <h2>CONSULTA A DOMICILIO</h2>
+    <p>Por favor, ingrese los detalles de su ubicación y su solicitud. Nos comunicaremos con usted para confirmar la cita.</p>
+
+    <!-- FORMULARIO CORRECTO -->
+    <form method="POST" action="{% url 'consulta_personalizada' %}" id="form-consulta">
+        {% csrf_token %}
+
+        <fieldset>
+            <legend>1. Datos del Cliente y Ubicación Básica</legend>
+
+            <div class="form-group">
+                <div class="form-field">
+                    <label for="usuario">Usuario / Nombre Completo:</label>
+                    <input type="text" id="usuario" name="usuario" required>
+                </div>
+
+                <div class="form-field">
+                    <label for="codigo_postal">Código Postal:</label>
+                    <input type="text" id="codigo_postal" name="codigo_postal" required pattern="\d{5}" title="Debe ser un código postal de 5 dígitos.">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-field">
+                    <label for="colonia">Colonia o Barrio:</label>
+                    <input type="text" id="colonia" name="colonia" required>
+                </div>
+
+            <div class="form-group">
+                <div class="form-field">
+                    <label for="telefono">Numero de telefono:</label>
+                    <input type="text" id="telefono" name="telefono" required>
+                </div>
+
+                <div class="form-field">
+                    <label for="num_exterior">Número Exterior:</label>
+                    <input type="text" id="num_exterior" name="num_exterior" required>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>2. Referencias y Solicitud</legend>
+
+            <div class="form-field">
+                <label for="referencias">Referencias:</label>
+                <textarea id="referencias" name="referencias" rows="3"></textarea>
+            </div>
+
+            <div class="form-field">
+                <label for="comentario">Comentario sobre el servicio solicitado:</label>
+                <textarea id="comentario" name="comentario" rows="5" required></textarea>
+            </div>
+        </fieldset>
+
+        <div class="button-container">
+            <button type="submit">Enviar Solicitud de Consulta</button>
+        </div>
+    </form>
+
+    <p style="text-align: center; margin-top: 20px; color: #666;">
+        Gracias por elegir INSTALACIONES UNIVERSALES
+    </p>
+</div>
+
+</body>
+</html>

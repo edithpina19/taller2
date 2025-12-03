@@ -1,0 +1,186 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión / Registrarse</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    </head>
+<body>
+    <header>
+        <h1>Bienvenido a Instalaciones Universales</h1>
+        <nav>
+            <a href="{% url 'index' %}">Inicio</a>
+            <a href="{% url 'servicios' %}">Servicios</a>
+            <a href="{% url 'iniciar_sesion' %}">Iniciar Sesión</a>
+            <a href="#">Busca</a>
+        </nav>
+    </header>
+
+    <main class="contenedor-principal-formularios">
+
+        <section class="formulario-caja" id="login-form">
+            <h2>🔑 Iniciar Sesión</h2>
+
+            <form action="{% url 'registro' %}" method="POST">
+    {% csrf_token %}
+
+
+                <div class="campo">
+                    <label for="username">Nombre de Usuario:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+
+                <div class="campo">
+                    <label for="password">Contraseña:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+
+                <button type="submit" class="btn-principal">Acceder</button>
+            </form>
+
+            <p class="link-secundario">
+                ¿Olvidaste tu contraseña? <a href="#">Recuperar</a>
+            </p>
+        </section>
+
+
+        <section class="formulario-caja" id="register-form">
+            <h2>📝 Registrarse</h2>
+            <p>Crea una cuenta para guardar el historial de tus reparaciones.</p>
+
+            <form action="{% url '' %}" method="post">
+                {% csrf_token %}
+
+<div class="comentarios-publicados-container">
+    <h3>Comentarios Recientes de Nuestros Clientes</h3>
+
+    {% for comentario in comentarios %}
+        <div class="comentario-card">
+            <p class="comentario-texto">"{{ comentario.texto_comentario }}"</p>
+            <p class="comentario-autor">
+                <strong>- {{ comentario.nombre }} {{ comentario.apellido }}</strong>
+                <span class="comentario-fecha">({{ comentario.fecha_creacion|date:"d M Y" }})</span>
+            </p>
+        </div>
+    {% empty %}
+        <p class="sin-comentarios">Aún no hay opiniones. ¡Sé el primero en dejar un comentario!</p>
+    {% endfor %}
+
+</div>
+
+<style>
+    .comentarios-publicados-container {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 0 30px;
+    }
+    .comentario-card {
+        border-left: 5px solid #ffc107;
+        padding: 15px;
+        margin-bottom: 20px;
+        background-color: #f9f9f9;
+        border-radius: 4px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+    .comentario-texto {
+        font-style: italic;
+        margin-bottom: 10px;
+        color: #333;
+    }
+    .comentario-autor {
+        font-size: 0.9em;
+        color: #555;
+        text-align: right;
+    }
+    .comentario-fecha {
+        color: #999;
+    }
+    .sin-comentarios {
+        text-align: center;
+        color: #888;
+        padding: 20px;
+        border: 1px dashed #ccc;
+    }
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <div class="campo">
+                    <label for="new_username">Nombre de Usuario:</label>
+                    <input type="text" id="new_username" name="new_username" required>
+                </div>
+
+                <div class="campo">
+                    <label for="new_password">Contraseña:</label>
+                    <input type="password" id="new_password" name="new_password" required>
+                </div>
+
+                <div class="campo">
+                    <label for="email">Correo Electrónico:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <button type="submit" class="btn-principal btn-verde">Crear Cuenta</button>
+            </form>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>© 2025 INSTALACIONES UNIVERSALES</p>
+    </footer>
+</body>
+</html>

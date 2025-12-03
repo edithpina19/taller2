@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ffb400, #000000);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            background: #ffffff;
+            padding: 40px 30px;
+            width: 350px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .login-container h2 {
+            margin-bottom: 25px;
+            font-size: 26px;
+            color: #333;
+        }
+
+        .input-box {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-box label {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .input-box input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 15px;
+            border: 1.5px solid #ddd;
+            transition: 0.3s;
+        }
+
+        .input-box input:focus {
+            border-color: #4f46e5;
+            outline: none;
+            box-shadow: 0 0 4px rgba(79, 70, 229, 0.5);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background: #ffb400;
+            color: black;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-login:hover {
+            background: #ba8e23;
+        }
+
+        .link {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .link a {
+            color: #4f46e5;
+            text-decoration: none;
+        }
+
+        .link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <h2>Iniciar Sesión</h2>
+        <!-- BLOQUE DE MENSAJES -->
+    {% if messages %}
+        {% for message in messages %}
+            <p style="color: red; font-size: 14px; margin-bottom: 15px;">
+                {{ message }}
+            </p>
+        {% endfor %}
+    {% endif %}
+    <!-- FIN BLOQUE MENSAJES -->
+
+
+
+        <form action="{% url 'login' %}" method="POST">
+    {% csrf_token %}
+            <div class="input-box">
+                <label>Usuario</label>
+                <input type="text" name="username" required>
+            </div>
+
+            <div class="input-box">
+                <label>Contraseña</label>
+                <input type="password" name="password" required>
+            </div>
+
+            <button class="btn-login">Entrar</button>
+
+            <p class="link">¿No tienes cuenta? <a href="/cuenta">Crear cuenta</a></p>
+        </form>
+    </div>
+
+</body>
+</html>
+
