@@ -415,3 +415,6 @@ def api_disponibilidad(request):
 
     return JsonResponse(eventos, safe=False)
 
+def logout_view(request):
+    request.session.flush()  # elimina toda la sesión
+    return redirect("index")  # lo manda a la página principal
