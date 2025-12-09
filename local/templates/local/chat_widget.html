@@ -1,7 +1,12 @@
-<!-- CHATBOT - WIDGET (con maximizar corregido) -->
+<!-- CHATBOT - WIDGET (VERSIÓN BURBUJA) -->
+
+<!-- Burbuja flotante -->
+<div id="chat-bubble">💬</div>
+
+<!-- Ventana del chat -->
 <div id="chat-window" aria-live="polite" aria-label="Asistente Instalaciones Universales">
   <div id="chat-header">
-    <button id="chat-control-btn" title="Maximizar chat">⛶</button>
+    <button id="chat-control-btn" title="Cerrar chat">✖</button>
     <span>Asistente Instalaciones Universales</span>
     <span style="width: 30px;"></span>
   </div>
@@ -20,107 +25,97 @@
 </div>
 
 <style>
-/* ======== CHATBOT ======== */
-#chat-window {
+/* ===== BURBUJA ===== */
+#chat-bubble {
   position: fixed;
   bottom: 20px;
+  right: 20px;
+  width: 65px;
+  height: 65px;
+  background: #39ff14;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  cursor: pointer;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+  z-index: 10000;
+}
+
+/* ===== VENTANA DEL CHAT ===== */
+#chat-window {
+  display: none;
+  position: fixed;
+  bottom: 100px;
   right: 20px;
   width: 330px;
   height: 430px;
   background: white;
-  border-radius: 10px;
-  box-shadow: 0px 4px 15px rgba(0,0,0,0.3);
-  display: flex;
+  border-radius: 25px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
   flex-direction: column;
   overflow: hidden;
   z-index: 9999;
-  transition: width 0.25s ease, height 0.25s ease, right 0.25s ease, bottom 0.25s ease, border-radius 0.25s ease;
   font-family: Arial, sans-serif;
 }
 
-/* Clase que indica "un poco más grande" (no full-screen) */
-#chat-window.enlarged {
-  width: 460px;     /* ancho aumentado */
-  height: 620px;    /* alto aumentado */
-  bottom: 30px;
-  right: 30px;
-  border-radius: 12px;
+/* Flechita de burbuja */
+#chat-window::after {
+  content: "";
+  position: absolute;
+  bottom: -15px;
+  right: 35px;
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-top: 15px solid white;
 }
 
-/* (opcional) versión más compacta en pantallas pequeñas */
-@media (max-width: 600px) {
-  #chat-window {
-    width: 95%;
-    right: 2.5%;
-    height: 60vh;
-  }
-  #chat-window.enlarged {
-    width: 98%;
-    height: 78vh;
-  }
-}
-
+/* Header */
 #chat-header {
   background: #0a2a43;
   color: white;
   padding: 10px 12px;
   font-size: 15px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  align-items: center;
 }
 
-#chat-header span {
-  flex: 1;
-  text-align: center;
-  padding-left: 8px;
-  font-weight: 600;
-}
-
+/* Botón cerrar */
 #chat-control-btn {
   background: transparent;
   border: none;
   color: white;
   font-size: 18px;
   cursor: pointer;
-  width: 30px;
-  height: 30px;
-  line-height: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  transition: background 0.15s;
 }
-#chat-control-btn:hover { background: rgba(255,255,255,0.05); }
 
+/* Mensajes */
 #chat-messages {
   flex: 1;
   padding: 14px;
   overflow-y: auto;
   background: #f7f9fb;
-  scroll-behavior: smooth;
 }
 
-/* Mensajes */
 .bot-message {
   background: #dbeaff;
   padding: 10px;
-  border-radius: 8px;
+  border-radius: 12px;
   margin-bottom: 10px;
   max-width: 85%;
-  color: #0b2a43;
 }
 
 .user-message {
   background: #d1ffd0;
   padding: 10px;
-  border-radius: 8px;
+  border-radius: 12px;
   margin-bottom: 10px;
   max-width: 85%;
   margin-left: auto;
-  color: #08320f;
 }
 
 /* Formulario */
@@ -137,14 +132,8 @@
   flex: 1;
   padding: 10px;
   border: 1px solid #ddd;
-  border-radius: 6px;
+  border-radius: 12px;
   outline: none;
-  font-size: 14px;
-}
-
-#chat-input:focus {
-  box-shadow: 0 0 0 3px rgba(10,42,67,0.06);
-  border-color: #0a2a43;
 }
 
 #chat-send-btn {
@@ -152,74 +141,42 @@
   color: white;
   border: none;
   padding: 9px 12px;
-  border-radius: 6px;
+  border-radius: 12px;
   cursor: pointer;
-  font-weight: 600;
 }
-
-#chat-send-btn:hover { opacity: 0.95; }
-
-/* cuando esté minimizado (opcional) */
-#chat-window.minimized {
-  height: 46px;
-  width: 180px;
-  border-radius: 10px;
-  overflow: visible;
-}
-#chat-window.minimized #chat-messages,
-#chat-window.minimized #chat-form { display: none; }
 </style>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const chatWindow = document.getElementById("chat-window");
+  const chatBubble = document.getElementById("chat-bubble");
   const controlBtn = document.getElementById("chat-control-btn");
   const form = document.getElementById("chat-form");
   const input = document.getElementById("chat-input");
   const messages = document.getElementById("chat-messages");
 
-  // Alterna entre estado normal y "enlarged" (un poco más grande)
-  controlBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    // Si está minimizado, restaurar primero
-    if (chatWindow.classList.contains("minimized")) {
-      chatWindow.classList.remove("minimized");
-      controlBtn.innerText = "⛶";
-      return;
-    }
-
-    // Alterna enlarged
-    const isEnlarged = chatWindow.classList.toggle("enlarged");
-
-    // Cambia el icono según estado
-    controlBtn.innerText = isEnlarged ? "✖" : "⛶";
-
-    // Asegura que el último mensaje esté visible después de animación
-    setTimeout(() => {
-      messages.scrollTop = messages.scrollHeight;
-    }, 260);
+  // Abrir chat al tocar burbuja
+  chatBubble.addEventListener("click", () => {
+    chatWindow.style.display = "flex";
+    chatBubble.style.display = "none";
   });
 
-  // Doble click en header para minimizar (opcional)
-  document.getElementById("chat-header").addEventListener("dblclick", () => {
-    if (!chatWindow.classList.contains("minimized")) {
-      chatWindow.classList.add("minimized");
-      controlBtn.innerText = "⛶";
-    }
+  // Cerrar chat
+  controlBtn.addEventListener("click", () => {
+    chatWindow.style.display = "none";
+    chatBubble.style.display = "flex";
   });
 
-  // Enviar mensaje (usa tu fetch existente)
+  // Enviar mensaje (mantiene tu backend intacto)
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const userText = input.value.trim();
     if (!userText) return;
 
-    // Mostrar mensaje del usuario
     messages.innerHTML += `<p class="user-message">${escapeHtml(userText)}</p>`;
     messages.scrollTop = messages.scrollHeight;
     input.value = "";
 
-    // Mostrar "escribiendo..."
     const typingEl = document.createElement("p");
     typingEl.className = "bot-message";
     typingEl.innerText = "Escribiendo...";
@@ -237,27 +194,22 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       const data = await res.json();
-      // eliminar "Escribiendo..."
       typingEl.remove();
 
-      const botText = (data && (data.reply || data.response || data.message)) || "Lo siento, no entendí. ¿Puedes reformular?";
+      const botText = (data && (data.reply || data.response || data.message)) || "Lo siento, no entendí.";
       messages.innerHTML += `<p class="bot-message">${escapeHtml(botText)}</p>`;
       messages.scrollTop = messages.scrollHeight;
     } catch (err) {
       typingEl.remove();
-      messages.innerHTML += `<p class="bot-message">Error al contactar con el servidor.</p>`;
-      messages.scrollTop = messages.scrollHeight;
-      console.error(err);
+      messages.innerHTML += `<p class="bot-message">Error al conectar con el servidor.</p>`;
     }
   });
 
-  // Helper: obtener csrftoken
   function getCSRF() {
     const cookie = document.cookie.split(";").find(c => c.trim().startsWith("csrftoken="));
     return cookie ? cookie.split("=")[1] : "";
   }
 
-  // Helper: escapar html para evitar inyección
   function escapeHtml(str) {
     return String(str)
       .replaceAll("&", "&amp;")
@@ -266,8 +218,5 @@ document.addEventListener("DOMContentLoaded", () => {
       .replaceAll('"', "&quot;")
       .replaceAll("'", "&#39;");
   }
-
-  // Asegurar scroll inicial al final
-  messages.scrollTop = messages.scrollHeight;
 });
 </script>
