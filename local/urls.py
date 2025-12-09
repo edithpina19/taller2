@@ -21,4 +21,5 @@ urlpatterns = [
     path('api/agendar-cita/', views.api_agendar_cita_post, name='api_agendar_cita_post'),
     path('api/disponibilidad/', views.api_disponibilidad, name='api_disponibilidad'),
     path("api/chatbot/", views.chatbot_api, name="chatbot_api"),
+    path("logout/", views.logout_view, name="logout"),
 ]
