@@ -1,7 +1,7 @@
 from pathlib import Path
 import os
 from dotenv import load_dotenv   # <-- IMPORTANTE
-
+import dj_database_url
 # Cargar variables del archivo .env (si existe)
 load_dotenv()
 
@@ -54,17 +54,54 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'reparaciones.wsgi.application'
+# --- INICIO DEL CÓDIGO MODIFICADO PARA COMPATIBILIDAD RENDER/LOCAL ---
+# Intentamos obtener la URL de la base de datos de la variable de entorno (Render)
+DATABASE_URL = os.environ.get('DATABASE_URL')
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'LOCAL',
-        'USER': 'postgres',
-        'PASSWORD': '1234Abcd.',
-        'HOST': 'localhost',
-        'PORT': '5432',
+if DATABASE_URL:
+    # ----------------------------------------------------
+    # CONFIGURACIÓN DE PRODUCCIÓN (RENDER)
+    # ----------------------------------------------------
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            # Render a menudo requiere SSL si se usa una conexión externa
+            # Si la conexión falla, podrías necesitar añadir:
+            # ssl_require=True
+        )
     }
-}
+
+    # También es una buena práctica forzar DEBUG=False y usar la clave secreta de Render
+    DEBUG = False
+    SECRET_KEY = os.environ.get('SECRET_KEY', SECRET_KEY) # Usa la variable de entorno si existe
+    
+    # Configura ALLOWED_HOSTS para que funcione en Render (usando el nombre del host externo)
+    RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+    if RENDER_EXTERNAL_HOSTNAME:
+        ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
+else:
+    # ----------------------------------------------------
+    # CONFIGURACIÓN DE DESARROLLO (LOCAL)
+    # ----------------------------------------------------
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'LOCAL', # Tu nombre local
+            'USER': 'postgres', # Tu usuario local
+            'PASSWORD': '1234Abcd.', # Tu contraseña local
+            'HOST': 'localhost',
+            'PORT': '5432',
+        }
+    }
+    
+    # En desarrollo, mantenemos el DEBUG y el ALLOWED_HOSTS originales
+    # DEBUG = True (ya está al principio, lo mantenemos)
+    # ALLOWED_HOSTS = ['127.0.0.1', 'localhost', ...] (ya está al principio, lo mantenemos)
+
+# --- FIN DEL CÓDIGO MODIFICADO ---
+
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
