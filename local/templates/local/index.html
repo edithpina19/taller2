@@ -572,15 +572,12 @@ NEGOCIO = {
     <div class="main-wrapper">
         <div class="sidebar">
             <ul>
-                {% if user.is_authenticated %}
-                  <li><a href="{% url 'mis_solicitudes' %}">Ver mi cuenta</a></li>
-                {% else %}
-                  <li><a href="{% url 'iniciar_sesion' %}">Iniciar sesión</a></li>
-{% endif %}
+                <li><a href="{% url 'mis_solicitudes' %}">Ver mi cuenta</a></li>
                 <li><a href="{% url 'servicios' %}" class="action-about">Servicios</a></li>
                 <li><a href="{% url 'consulta_personalizada' %}" class="action-about">Consulta a domicilio</a></li>
                 <li><a href="{% url 'sobre_nosotros' %}" class="action-about">Sobre nosotros</a></li>
                 <li><a href="{% url 'opiniones' %}" class="action-about">Opiniones</a></li>
+                <li><a href="{% url 'huella_carbono' %}" class="action-about">Huella de carbono</a></li>
             </ul>
         </div>
 
@@ -645,7 +642,8 @@ NEGOCIO = {
 
                 <div class="why-us-card">
                     <h3>GARANTÍA Y SERVICIO</h3>
-                        <img src="{% static 'img/garantia.png' %}" alt="Imagen de Garantía" class="warranty-image"> <p class="warranty-text">
+                    <img src="{% static 'img/garantia.png' %}" alt="Imagen de Garantía" class="warranty-image">
+                    <p class="warranty-text">
                         Contamos con garantía de 30 días.<br>
                         Realizamos instalaciones a domicilio.
                     </p>
