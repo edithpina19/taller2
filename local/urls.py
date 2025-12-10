@@ -1,11 +1,10 @@
 from django.urls import path, include
 from . import views
 
-
 urlpatterns = [
     path('', views.index, name='index'),
     path('servicios/', views.servicios, name='servicios'),
-    path('iniciar-sesion/', views.autenticacion_view, name='iniciar_sesion'),
+path('iniciar-sesion/', views.login_view, name='iniciar_sesion'),
     path('contacto/', views.contacto, name='contacto'),
     path("sobre-nosotros/", views.sobre_nosotros_view, name="sobre_nosotros"),
     path("cuenta/", views.cuenta, name="cuenta"),
@@ -22,4 +21,7 @@ urlpatterns = [
     path('api/disponibilidad/', views.api_disponibilidad, name='api_disponibilidad'),
     path("api/chatbot/", views.chatbot_api, name="chatbot_api"),
     path("logout/", views.logout_view, name="logout"),
+    path("huella_carbono/", views.huella_carbono, name="huella_carbono"),
+    path("terminos/", views.terminos, name="terminos"),
+
 ]
