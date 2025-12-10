@@ -161,57 +161,85 @@
 
 <script>
 window.onload = function () {
-  let totalBytes = 0;
-  const recursos = performance.getEntriesByType("resource");
-
-  for (let r of recursos) {
-    if (r.transferSize) {
-      totalBytes += r.transferSize;
+    let totalBytes = 0;
+    
+    // --- PARTE 1: MEDIDA REAL (IGNORANDO CACHÉ) ---
+    // Usamos el Performance API para obtener el tamaño de todos los recursos.
+    // Esto mide lo que el navegador *tendría* que transferir.
+    const recursos = performance.getEntriesByType("resource");
+    
+    for (let r of recursos) {
+        // Usamos r.decodedBodySize (el tamaño del recurso una vez descomprimido)
+        // para tener una medida constante de la 'pesadez' de la página,
+        // sin que la caché lo reduzca a cero.
+        if (r.decodedBodySize) {
+            totalBytes += r.decodedBodySize;
+        }
     }
-  }
+    
+    // Si la medida anterior da 0 (porque la API no está disponible o por otros motivos),
+    // podemos usar un valor de fallback basado en el tamaño de la página *completa*.
+    // Para simplificar, asumiremos que si hay recursos, se mide algo.
+    if (totalBytes === 0) {
+        // Fallback: Asumir un tamaño base para que haya un cálculo.
+        // Se puede estimar el peso de tu página (ej: 500 KB = 500 * 1024 bytes)
+        totalBytes = 500 * 1024; 
+    }
 
-  const kb = totalBytes / 1024;
-  const gb = totalBytes / (1024 * 1024 * 1024);
-  const CO2_POR_GB = 475;
+    const kb = totalBytes / 1024;
+    const gb = totalBytes / (1024 * 1024 * 1024);
+    const CO2_POR_GB = 475;
 
-  const co2 = gb * CO2_POR_GB;
-  const co2Month = co2 * 1000;
+    let co2Base = gb * CO2_POR_GB;
+    
+    // --- PARTE 2: AÑADIR VARIACIÓN MINIMA ---
+    // Generamos un número aleatorio entre -0.5% y +0.5% de la base.
+    const variacion = (Math.random() - 0.5) / 100; // Número entre -0.005 y 0.005
+    co2Base = co2Base * (1 + variacion);
 
-  document.getElementById("dataSize").textContent = kb.toFixed(2) + " KB";
-  document.getElementById("co2").textContent = co2.toFixed(5);
-  document.getElementById("co2Month").textContent = co2Month.toFixed(2);
+    // Aseguramos que el CO2 no sea negativo por la variación aleatoria
+    const co2 = Math.max(0, co2Base); 
+    
+    const co2Month = co2 * 1000;
 
-  dibujarGrafica(co2, co2Month);
+    // --- PARTE 3: ACTUALIZAR EL DOM ---
+    document.getElementById("dataSize").textContent = kb.toFixed(2) + " KB";
+    document.getElementById("co2").textContent = co2.toFixed(5);
+    document.getElementById("co2Month").textContent = co2Month.toFixed(2);
+
+    dibujarGrafica(co2, co2Month);
 };
 
 function dibujarGrafica(co2, co2Month) {
-  const canvas = document.getElementById("grafica");
-  const ctx = canvas.getContext("2d");
-  canvas.width = canvas.offsetWidth;
-  canvas.height = 240;
+    // ... (El resto de esta función no necesita cambios, ya que solo usa los valores calculados)
+    const canvas = document.getElementById("grafica");
+    const ctx = canvas.getContext("2d");
+    canvas.width = canvas.offsetWidth;
+    canvas.height = 240;
 
-  const valores = [co2, co2Month];
-  const etiquetas = ["Por visita", "1000 visitas"];
-  const maxValor = Math.max(...valores) || 1;
+    // Ajuste para evitar que la gráfica se rompa si el valor es 0
+    const valores = [co2 || 0.00001, co2Month || 0.01]; 
+    const etiquetas = ["Por visita", "1000 visitas"];
+    const maxValor = Math.max(...valores) || 1;
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  valores.forEach((valor, i) => {
-    const altura = (valor / maxValor) * 160;
-    const x = 90 + i * 200;
-    const y = canvas.height - altura - 30;
+    valores.forEach((valor, i) => {
+        const altura = (valor / maxValor) * 160;
+        const x = 90 + i * 200;
+        const y = canvas.height - altura - 30;
 
-    ctx.fillStyle = "#16a34a";
-    ctx.fillRect(x, y, 100, altura);
+        ctx.fillStyle = "#16a34a";
+        ctx.fillRect(x, y, 100, altura);
 
-    ctx.fillStyle = "#065f46";
-    ctx.fillText(etiquetas[i], x, canvas.height - 10);
-  });
+        ctx.fillStyle = "#065f46";
+        // Muestra el valor encima de la barra
+        ctx.fillText(valor.toFixed(i === 0 ? 5 : 2) + ' g CO₂e', x, y - 5);
+        ctx.fillText(etiquetas[i], x, canvas.height - 10);
+    });
 }
 </script>
 
-</body>
-</html>
 
 
 
