@@ -160,53 +160,40 @@
 </div>
 
 <script>
-// --- Valores Fijos de Simulación ---
-// Usaremos valores base que simulan un sitio web de tamaño medio.
-// Si deseas un valor base diferente para tu página, puedes ajustarlos.
+// --- Valores Fijos de Simulación (Aumentamos el valor base para que el cambio sea visible) ---
 const TAMANO_BASE_KB = 550; // 550 KB de transferencia (Valor fijo)
-const CO2_BASE_POR_VISITA = 0.00003; // g CO₂e (Valor fijo)
+const CO2_BASE_POR_VISITA = 0.003; // G CO₂e (¡Cambiado de 0.00003 a 0.003 para ver variación!)
 
 window.onload = function () {
     
     // --- 1. Generar Variación Aleatoria Notable ---
-    // Generamos un número aleatorio entre -15% y +15% del valor base.
-    // Esto asegura que el cambio sea visible.
     const rango_variacion = 0.30; // 30% total de rango (-15% a +15%)
-    
-    // Calcula un factor multiplicador entre 0.85 y 1.15
     const factor_aleatorio = 1 + (Math.random() - 0.5) * rango_variacion; 
 
     // --- 2. Aplicar la Variación a los Datos de CO₂ ---
-    
-    // Huella de Carbono por visita (con la variación aleatoria)
     let co2 = CO2_BASE_POR_VISITA * factor_aleatorio;
-    
-    // Aseguramos que el CO2 no sea negativo
     co2 = Math.max(0, co2); 
-    
-    // CO₂ por 1000 visitas
     const co2Month = co2 * 1000;
 
     // --- 3. Actualizar la Interfaz (DOM) ---
 
-    // Los datos transferidos se mantendrán fijos (simulación) para que solo varíe el CO2.
     document.getElementById("dataSize").textContent = TAMANO_BASE_KB.toFixed(2) + " KB";
     
-    document.getElementById("co2").textContent = co2.toFixed(5);
+    // Aumentamos a 8 decimales para que el cambio sea visible en la interfaz
+    document.getElementById("co2").textContent = co2.toFixed(8); 
     document.getElementById("co2Month").textContent = co2Month.toFixed(2);
 
     dibujarGrafica(co2, co2Month);
 };
 
-// La función para dibujar la gráfica con los nuevos valores (incluye fix para texto)
+// La función para dibujar la gráfica
 function dibujarGrafica(co2, co2Month) {
     const canvas = document.getElementById("grafica");
     const ctx = canvas.getContext("2d");
     canvas.width = canvas.offsetWidth;
     canvas.height = 240;
 
-    // Ajuste: si el valor es 0, usamos un mínimo para que la gráfica se dibuje.
-    const valores = [co2 || 0.00001, co2Month || 0.01]; 
+    const valores = [co2 || 0.00001, co2Month || 0.01]; 
     const etiquetas = ["Por visita", "1000 visitas"];
     const maxValor = Math.max(...valores) || 1;
 
@@ -222,11 +209,12 @@ function dibujarGrafica(co2, co2Month) {
 
         ctx.fillStyle = "#065f46";
         // Mostrar el valor encima de la barra (con el formato correcto de decimales)
-        const valorTexto = valor.toFixed(i === 0 ? 5 : 2) + ' g CO₂e';
-        ctx.fillText(valorTexto, x, y - 5); 
+        // Usamos 8 decimales para el valor por visita
+        const decimales = i === 0 ? 8 : 2; 
+        const valorTexto = valor.toFixed(decimales) + ' g CO₂e';
+        ctx.fillText(valorTexto, x, y - 5); 
         ctx.fillText(etiquetas[i], x, canvas.height - 10);
     });
 }
 </script>
-
 
