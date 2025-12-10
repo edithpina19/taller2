@@ -48,6 +48,8 @@ def sobre_nosotros_view(request):
 def contacto(request):
     return render(request, 'local/contacto.html')
 
+def terminos(request):
+    return render(request, 'local/terminos.html')
 
 # ------------------------------
 # OPINIONES / COMENTARIOS
@@ -87,59 +89,53 @@ def autenticacion_view(request):
 
 
 def login_view(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-
-        usuario = authenticate(request, username=username, password=password)
-
-        if usuario:
-            login(request, usuario)
-            return redirect('cuenta')
-
-        return render(request, 'local/iniciar_sesion.html', {
-            'error': 'Credenciales incorrectas'
-        })
-
-    return redirect('iniciar_sesion')
-
-def registro(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        phone = request.POST.get('phone')
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-
-        if User.objects.filter(username=username).exists():
-            return render(request, 'local/cuenta.html', {
-                'error': 'Ese nombre de usuario ya está registrado.'
-            })
-
-        # 1. La variable 'user' se define aquí
-        user = User.objects.create(
-            username=username,
-            email=email,
-            password=make_password(password)
-        )
-
-        try:
-            # 2. La variable 'user' se usa aquí
-            Usuario.objects.create(
-                user=user,
-                phone=phone
-            )
-        except TypeError as e:
-            # ... (Manejo de error) ...
-            user.delete()
-            return redirect('registro')
+    # Si YA está logueado → lo mandamos al inicio, NO al login
+    if request.user.is_authenticated:
         return redirect('index')
 
-    # 3. Este es el bloque GET. La variable 'user' no debe usarse aquí.
-    return render(request, 'local/index.html')
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
 
-# ------------------------------
-# CONSULTA PERSONALIZADA
-# ------------------------------
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('index')
+        else:
+            messages.error(request, 'Usuario o contraseña incorrectos')
+
+    return render(request, 'local/iniciar_sesion.html')
+
+def registro(request):
+
+    # Forzar limpieza de sesión fantasma
+    if request.user.is_authenticated:
+        logout(request)
+
+    if request.method == 'POST':
+        username = request.POST.get('new_username')
+        password = request.POST.get('new_password')
+        email = request.POST.get('email')
+
+        if not username or not password:
+            messages.error(request, 'Faltan datos obligatorios')
+            return redirect('registro')
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, 'Ese usuario ya existe')
+            return redirect('registro')
+
+        User.objects.create_user(
+            username=username,
+            password=password,
+            email=email
+        )
+
+        messages.success(request, 'Cuenta creada correctamente')
+        return redirect('cuenta')
+
+    return render(request, 'local/cuenta.html')
 
 def consulta_personalizada(request):
     if request.method == "POST":
@@ -209,6 +205,12 @@ def cuenta(request):
 def cerrar_sesion(request):
     logout(request)
     return redirect('iniciar_sesion')
+
+from django.shortcuts import render
+
+def huella_carbono(request):
+    return render(request, 'huella_carbono.html')
+
 
 @login_required
 def agregar_servicio(request):
