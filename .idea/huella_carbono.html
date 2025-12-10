@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Huella de Carbono - Taller Ecológico</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: linear-gradient(135deg, #dcfce7, #bbf7d0, #86efac);
+      color: #064e3b;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: auto;
+      padding: 24px;
+    }
+
+    .eco-title {
+      text-align: center;
+      font-size: 28px;
+      margin-bottom: 20px;
+      color: #064e3b;
+      font-weight: bold;
+    }
+
+    .eco-card {
+      background: #f0fdf4;
+      border: 2px solid #22c55e;
+      border-radius: 22px;
+      padding: 22px;
+      margin-bottom: 24px;
+      box-shadow: 0 12px 24px rgba(22, 101, 52, 0.15);
+    }
+
+    .eco-card h2 {
+      margin-top: 0;
+      color: #065f46;
+    }
+
+    .eco-box {
+      background: #dcfce7;
+      border-left: 6px solid #22c55e;
+      padding: 18px;
+      border-radius: 14px;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .eco-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .btn-eco {
+      margin-top: 16px;
+      display: inline-block;
+      background: linear-gradient(135deg, #16a34a, #22c55e);
+      color: #ffffff;
+      text-decoration: none;
+      padding: 14px 24px;
+      border-radius: 999px;
+      font-size: 15px;
+      font-weight: bold;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+      transition: all .15s ease;
+    }
+
+    .btn-eco:hover {
+      transform: scale(1.05);
+      background: linear-gradient(135deg, #15803d, #16a34a);
+    }
+
+    canvas {
+      width: 100%;
+      height: 240px;
+      border-radius: 18px;
+      border: 2px solid #22c55e;
+      background: #ecfdf5;
+    }
+
+    .eco-values {
+      font-size: 20px;
+      font-weight: bold;
+      text-align: center;
+      color: #065f46;
+    }
+
+    .eco-label {
+      text-align: center;
+      font-size: 14px;
+      color: #166534;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="eco-title">🌿 Huella de Carbono Digital del Taller</div>
+
+  <!-- MÉTRICAS -->
+  <div class="eco-card">
+    <h2>🌎 Impacto ambiental de esta página</h2>
+    <p class="eco-label">Datos transferidos</p>
+    <p class="eco-values" id="dataSize">Cargando...</p>
+
+    <p class="eco-label">CO₂ generado por visita</p>
+    <p class="eco-values"><span id="co2">0</span> g CO₂e</p>
+
+    <p class="eco-label">CO₂ por 1000 visitas</p>
+    <p class="eco-values"><span id="co2Month">0</span> g CO₂e</p>
+  </div>
+
+  <!-- GRÁFICA -->
+  <div class="eco-card">
+    <h2>📊 Gráfica de impacto</h2>
+    <canvas id="grafica"></canvas>
+  </div>
+
+  <!-- CUADROS 2X2 -->
+  <div class="eco-card">
+    <h2>🌱 Compromiso Ecológico del Taller</h2>
+
+    <div class="eco-grid">
+      <div class="eco-box">
+        <b>¿Qué es la huella de carbono?</b><br><br>
+        Es la medida de las emisiones de gases contaminantes generadas directa o
+        indirectamente por nuestras actividades, incluido el uso de servicios digitales.
+      </div>
+
+      <div class="eco-box">
+        <b>Reparación para reducir contaminación</b><br><br>
+        Nuestro taller repara equipos electrónicos para evitar que terminen como
+        residuos electrónicos, disminuyendo la contaminación ambiental.
+      </div>
+
+      <div class="eco-box">
+        <b>Compromiso ambiental</b><br><br>
+        Utilizamos procesos responsables, fomentamos la reutilización de piezas y
+        aplicamos prácticas de ahorro energético en cada servicio.
+      </div>
+
+      <div class="eco-box">
+        <b>Política ética y legal</b><br><br>
+        Operamos bajo principios de ética profesional, honestidad, confidencialidad
+        y respeto a nuestros clientes, cuidando la transparencia y la confianza.
+        <br><br>
+        <a href="{% url 'terminos' %}" class="btn-eco">
+          📄 Ver Términos y Condiciones
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+window.onload = function () {
+  let totalBytes = 0;
+  const recursos = performance.getEntriesByType("resource");
+
+  for (let r of recursos) {
+    if (r.transferSize) {
+      totalBytes += r.transferSize;
+    }
+  }
+
+  const kb = totalBytes / 1024;
+  const gb = totalBytes / (1024 * 1024 * 1024);
+  const CO2_POR_GB = 475;
+
+  const co2 = gb * CO2_POR_GB;
+  const co2Month = co2 * 1000;
+
+  document.getElementById("dataSize").textContent = kb.toFixed(2) + " KB";
+  document.getElementById("co2").textContent = co2.toFixed(5);
+  document.getElementById("co2Month").textContent = co2Month.toFixed(2);
+
+  dibujarGrafica(co2, co2Month);
+};
+
+function dibujarGrafica(co2, co2Month) {
+  const canvas = document.getElementById("grafica");
+  const ctx = canvas.getContext("2d");
+  canvas.width = canvas.offsetWidth;
+  canvas.height = 240;
+
+  const valores = [co2, co2Month];
+  const etiquetas = ["Por visita", "1000 visitas"];
+  const maxValor = Math.max(...valores) || 1;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  valores.forEach((valor, i) => {
+    const altura = (valor / maxValor) * 160;
+    const x = 90 + i * 200;
+    const y = canvas.height - altura - 30;
+
+    ctx.fillStyle = "#16a34a";
+    ctx.fillRect(x, y, 100, altura);
+
+    ctx.fillStyle = "#065f46";
+    ctx.fillText(etiquetas[i], x, canvas.height - 10);
+  });
+}
+</script>
+
+</body>
+</html>
+
+
+
