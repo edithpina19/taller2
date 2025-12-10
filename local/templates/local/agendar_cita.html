@@ -45,7 +45,7 @@
         <div class="col-md-4 p-4 border-end">
             <h4 class="mb-3 text-primary">Agendar ahora</h4>
 
-            <p class="small text-muted mb-4">Agendando como: <strong id="usuario-nombre">Cargando...</strong></p>
+            <p class="small text-muted mb-4">Agendando como: {{ user.first_name|default:user.username }}</strong></p>
 
             <form id="appointment-form">
 
@@ -89,15 +89,17 @@
         var inputDateEl = document.getElementById('inputDate');
         var inputTimeEl = document.getElementById('inputTime');
 
-        // ⭐️ SIMULACIÓN DE LA VARIABLE DE SESIÓN DEL USUARIO ⭐️
+        // ⭐️ MODIFICACIÓN CLAVE EN JS: Ahora usamos las variables de Django inyectadas ⭐️
+        // El valor se lee directamente de la sesión del backend.
         const USUARIO_LOGUEADO = {
-            id: 123,
-            nombre: "Juan Pérez",
-            email: "juan.perez@example.com"
+            // Asegúrate de usar comillas para que el valor de Django sea una cadena JavaScript
+            nombre: "{{ usuario_nombre }}",
+            email: "{{ usuario_email }}" // Se asume que esta variable también viene de Django
         };
 
-        // Muestra el nombre del usuario en el formulario
-        document.getElementById('usuario-nombre').textContent = USUARIO_LOGUEADO.nombre;
+        // NOTA: La línea siguiente ya no es estrictamente necesaria si usas la MODIFICACIÓN CLAVE en el HTML de arriba.
+        // Pero la mantenemos por si el nombre del usuario no está disponible en la plantilla.
+        // document.getElementById('usuario-nombre').textContent = USUARIO_LOGUEADO.nombre;
 
 
         // ------------------------------------------------------------------
