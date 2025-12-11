@@ -18,14 +18,14 @@
     <ul>
         {% for s in solicitudes %}
             <li>
-                <strong>{{ s.servicio }}</strong><br>
+                <strong>{{ s.aparato_nombre }}</strong><br>
+                Cantidad: {{ s.cantidad }}<br>
+                Fecha solicitada: {{ s.fecha_solicitud }}<br>
 
-                <!-- ⭐ NUEVO: FECHA Y HORA EN QUE AGENDÓ (fecha_creacion) -->
-                Fecha que agendó: {{ s.fecha_creacion|date:"d M Y H:i" }}<br>
-
-                <!-- Ya existente -->
-                Fecha: {{ s.fecha }}<br>
-                Estado: {{ s.estado }}
+                <!-- Si tu modelo tiene fecha_creacion -->
+                {% if s.fecha_creacion %}
+                    Fecha que agendó: {{ s.fecha_creacion|date:"d M Y H:i" }}<br>
+                {% endif %}
             </li>
         {% endfor %}
     </ul>
