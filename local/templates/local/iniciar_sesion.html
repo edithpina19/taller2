@@ -1,131 +1,105 @@
-#iniciar sesion
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión / Registrarse</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    </head>
+    <title>Crear Cuenta</title>
+
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+            font-family: Arial, sans-serif;
+        }
+
+        .account-creation-container {
+            max-width: 400px;
+            width: 90%;
+            padding: 20px 30px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            background-color: #ffffff;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        p {
+            text-align: center;
+            color: #777;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
 <body>
-    <header>
-        <h1>Bienvenido a Instalaciones Universales</h1>
-        <nav>
-            <a href="{% url 'index' %}">Inicio</a>
-            <a href="{% url 'servicios' %}">Servicios</a>
-            <a href="{% url 'iniciar_sesion' %}">Iniciar Sesión</a>
-            <a href="#">Busca</a>
-        </nav>
-    </header>
 
-    <main class="contenedor-principal-formularios">
+<div class="account-creation-container">
+    <h2>CREAR CUENTA</h2>
+    <p>Los campos marcados con * son obligatorios</p>
 
-        <section class="formulario-caja" id="login-form">
-            <h2>🔑 Iniciar Sesión</h2>
+    <form action="{% url 'cuenta' %}" method="POST">
+        {% csrf_token %}
 
-<form action="{% url 'registro' %}" method="post">
-    {% csrf_token %}
+        <div class="form-group">
+            <label for="new_username">Nombre de Usuario *</label>
+            <input type="text" id="new_username" name="new_username" required>
+        </div>
 
-    <div class="campo">
-        <label for="username">Nombre de Usuario:</label>
-        <input type="text" id="username" name="username" required>
-    </div>
+        <div class="form-group">
+            <label for="new_password">Contraseña *</label>
+            <input type="password" id="new_password" name="new_password" required>
+        </div>
 
-    <div class="campo">
-        <label for="phone">Celular:</label>
-        <input type="tel" id="phone" name="phone" required>
-    </div>
+        <div class="form-group">
+            <label for="email">Correo Electrónico *</label>
+            <input type="email" id="email" name="email" required>
+        </div>
 
-    <div class="campo">
-        <label for="password">Contraseña:</label>
-        <input type="password" id="password" name="password" required>
-    </div>
+        <button type="submit">Registrarse</button>
+    </form>
+</div>
 
-    <div class="campo">
-        <label for="email">Correo Electrónico:</label>
-        <input type="email" id="email" name="email">
-    </div>
-
-    <button type="submit" class="btn-principal btn-verde">
-        Crear Cuenta
-    </button>
-</form>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                <div class="campo">
-                    <label for="new_username">Nombre de Usuario:</label>
-                    <input type="text" id="new_username" name="new_username" required>
-                </div>
-
-                <div class="campo">
-                    <label for="new_password">Contraseña:</label>
-                    <input type="password" id="new_password" name="new_password" required>
-                </div>
-
-                <div class="campo">
-                    <label for="email">Correo Electrónico:</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-
-                <button type="submit" class="btn-principal btn-verde">Crear Cuenta</button>
-            </form>
-        </section>
-
-    </main>
-
-    <footer>
-        <p>© 2025 INSTALACIONES UNIVERSALES</p>
-    </footer>
 </body>
 </html>
