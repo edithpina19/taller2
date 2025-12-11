@@ -177,9 +177,9 @@
 
                     <td>
                         {% if ultima_cita %}
-                            {{ ultima_cita.fecha_cita|date:"d/m/Y" }}
+                            {{ ultima_cita.hora_inicio|time:"h:i A" }} - {{ ultima_cita.hora_fin|time:"h:i A" }}
                         {% else %}
-                            <span style="color: #999; font-style: italic;">Sin agendar</span>
+                            <span style="color: #999;">-</span>
                         {% endif %}
                     </td> 
                     
