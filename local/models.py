@@ -85,7 +85,7 @@ class Cita(models.Model):
     """Modelo para registrar una cita de servicio agendada."""
 
     ESTADOS = [
-        ('PENDIENTE', 'Pendiente de Confirmación'),
+        ('PENDIENTE', 'CONFIRMADA'),
         # ... (otros estados)
     ]
 
