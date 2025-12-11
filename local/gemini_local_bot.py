@@ -82,4 +82,4 @@ if __name__ == "__main__":
         respuesta = responder('¿Cuál es su horario de atención hoy?')
         print(f"Respuesta de la IA: {respuesta}")
     else:
-        print("No se puede ejecutar la prueba. Falta configuración.")
+        print("No se puede ejecutar la prueba. Falta configuración.") 
