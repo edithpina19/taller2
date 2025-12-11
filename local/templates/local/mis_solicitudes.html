@@ -1,82 +1,21 @@
 <style>
-/* ------------------------------------- */
-/* --- 🎨 ESTILOS PARA MIS SOLICITUDES y CUENTA --- */
-/* ------------------------------------- */
+/* ... (Estilos CSS Modernos omitidos por brevedad, asumiendo que ya los aplicaste) ... */
 
 .solicitudes-container {
-    padding: 20px;
-    background-color: #f8f9fa;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-    margin-bottom: 25px;
-    max-width: 900px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-/* ... (Otros estilos de .solicitudes-container y .solicitud-table omitidos por brevedad) ... */
-
-.solicitudes-container h2 {
-    color: #343a40;
-    border-bottom: 3px solid #007bff;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-}
-
-.solicitudes-container h3 {
-    color: #495057;
-    margin-top: 30px;
-    margin-bottom: 15px;
+    /* ... */
 }
 
 .solicitud-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-    background-color: #ffffff;
+    /* ... */
 }
 
-.solicitud-table thead tr {
-    background-color: #007bff;
-    color: white;
-    text-align: left;
-}
-
-.solicitud-table th,
-.solicitud-table td {
-    padding: 12px 15px;
-    border-bottom: 1px solid #dee2e6;
-}
-
-.empty-message {
-    padding: 15px;
-    background-color: #fff3cd;
-    color: #856404;
-    border: 1px solid #ffeeba;
-    border-radius: 5px;
-    margin-top: 20px;
-    text-align: center;
-}
-
-.btn-regresar {
-    display: inline-block;
-    padding: 8px 15px;
-    background-color: #2b2b2b;
-    color: white;
-    text-decoration: none;
-    border-radius: 6px;
-    font-weight: bold;
-}
-
-.btn-logout {
-    display: inline-block;
-    padding: 8px 15px;
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 6px;
-    font-weight: bold;
+/* Estilo para Aparatos No Definidos */
+.aparato-alerta {
+    color: #cc0000; /* Rojo */
+    font-weight: 700;
+    background-color: #ffe0e0; /* Fondo rojo claro */
+    padding: 2px 5px;
+    border-radius: 4px;
 }
 </style>
 
@@ -98,25 +37,18 @@
                 </tr>
             </thead>
 
-...
-            <thead>
-                <tr>
-                    <th>Aparato</th>
-                    <th>Cantidad</th>
-                    <th>Fecha de Solicitud</th>
-                    <th>Fecha de Cita</th>  <th>Hora de Cita</th>   <th>Estado</th>
-                </tr>
-            </thead>
-
             <tbody>
                 {% for servicio in servicios_solicitados %}
                 <tr>
                     <td>
-                        {{ servicio.nombre_aparato|default:"Aparato Desconocido" }}
+                        {% if servicio.nombre_aparato %}
+                            {{ servicio.nombre_aparato }}
+                        {% else %}
+                            <span class="aparato-alerta">❌ Sin Aparato Definido (Error DB)</span>
+                        {% endif %}
                     </td>
                     
                     <td>{{ servicio.cantidad|default:"-" }}</td>
-                    
                     <td>{{ servicio.fecha_solicitud|date:"d/m/Y H:i" }}</td> 
 
                     <td>{{ servicio.fecha_cita|date:"d/m/Y"|default:"-" }}</td> 
@@ -129,11 +61,28 @@
                         {% endif %}
                     </td>
                     
-                    <td>Confirmada</td> 
+                    <td>
+                        {% if servicio.estado == 'Pendiente' %}
+                            <span style="color: orange; font-weight: bold;">Pendiente</span>
+                        {% else %}
+                            <span style="color: #28a745; font-weight: bold;">{{ servicio.estado|default:"Confirmada" }}</span>
+                        {% endif %}
+                    </td> 
                 </tr>
                 {% endfor %}
             </tbody>
-...
+        </table>
+
+    {% else %}
+        <div class="empty-message">
+            No tienes servicios registrados.
+        </div>
+    {% endif %}
+
+    <div style="margin-top: 30px; text-align: right;">
+        <a href="javascript:history.back()" class="btn-regresar">&larr; Regresar</a>
+        <form method="post" action="{% url 'cerrar_sesion' %}" style="display: inline-block; margin-left: 10px;">
+            {% csrf_token %}
             <button type="submit" class="btn-logout">Cerrar Sesión</button>
         </form>
     </div>
