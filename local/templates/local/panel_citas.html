@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Panel de Administración - Citas</h2>
+
+<table border="1" cellpadding="10" cellspacing="0" style="width:100%; border-collapse: collapse;">
+    <thead>
+        <tr>
+            <th>Cliente</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for cita in citas %}
+        <tr>
+            <td>{{ cita.cliente.username }}</td>
+            <td>{{ cita.fecha_cita }}</td>
+            <td>{{ cita.hora_inicio }} - {{ cita.hora_fin }}</td>
+            <td>{{ cita.get_estado_display }}</td>
+            <td>
+                {% if cita.estado == 'PENDIENTE' %}
+                    <a href="{% url 'confirmar_cita' cita.id %}">✅ Confirmar</a> |
+                    <a href="{% url 'cancelar_cita' cita.id %}">❌ Cancelar</a>
+                {% elif cita.estado == 'CONFIRMADA' %}
+                    Confirmada | <a href="{% url 'cancelar_cita' cita.id %}">❌ Cancelar</a>
+                {% else %}
+                    Cancelada
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">No hay citas registradas.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
