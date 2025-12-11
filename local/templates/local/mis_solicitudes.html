@@ -78,13 +78,11 @@
 }
 </style>
 
-<a href="javascript:history.back()" class="btn-regresar">&larr; Regresar</a>
-
 <div class="solicitudes-container">
     <h2>MIS SOLICITUDES</h2>
 
     {% if servicios_solicitados %}
-        <h3>📦 APARATOS A REPARAR</h3>
+        <h3>📦 APARATOS A REPARAR</h3> 
 
         <table class="solicitud-table">
             <thead>
@@ -103,15 +101,19 @@
                 <tr>
                     <td>{{ servicio.nombre_aparato|default:"Sin nombre" }}</td>
                     <td>{{ servicio.cantidad|default:"-" }}</td>
-                    <td>{{ servicio.fecha_solicitud|date:"d/m/Y H:i" }}</td>
+                    <td>{{ servicio.fecha_solicitud|date:"d/m/Y H:i" }}</td> 
 
-                    {% if ultima_cita %}
-                        <td>{{ ultima_cita.fecha_cita|date:"d/m/Y" }}</td>
-                        <td>{{ ultima_cita.hora_inicio|time:"H:i" }} - {{ ultima_cita.hora_fin|time:"H:i" }}</td>
-                        <td>{{ ultima_cita.get_estado_display }}</td>
-                    {% else %}
-                        <td colspan="3"><em>No hay cita agendada</em></td>
-                    {% endif %}
+                    <td>{{ servicio.fecha_cita|date:"d/m/Y"|default:"-" }}</td> 
+                    
+                    <td>
+                        {% if servicio.hora_inicio and servicio.hora_fin %}
+                            {{ servicio.hora_inicio|time:"H:i" }} - {{ servicio.hora_fin|time:"H:i" }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    
+                    <td>**Confirmada**</td> 
                 </tr>
                 {% endfor %}
             </tbody>
