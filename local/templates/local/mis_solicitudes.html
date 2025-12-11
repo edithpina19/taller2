@@ -70,7 +70,7 @@
     border-bottom: none;
 }
 
-/* Mensajes de No hay Solicitudes (General) */
+/* Mensajes de No hay Solicitudes */
 .empty-message {
     padding: 15px;
     background-color: #fff3cd;
@@ -128,6 +128,7 @@
 
     {% if servicios_solicitados %}
         <h3>📦 APARATOS A REPARAR</h3>
+
         <table class="solicitud-table">
             <thead>
                 <tr>
@@ -146,11 +147,7 @@
                     <td>{{ servicio.cantidad }}</td>
                     <td>{{ servicio.fecha_solicitud|date:"d M Y H:i" }}</td>
 
-                    {% comment %}
-                        Suponiendo que cada servicio tenga una cita relacionada
-                        Si no la tiene, mostrar "Sin cita agendada"
-                    {% endcomment %}
-                    {% with cita=servicio.usuario.citas_agendadas.last %}
+                    {% with cita=ultima_cita %}
                         {% if cita %}
                             <td>{{ cita.fecha_cita|date:"d M Y" }}</td>
                             <td>{{ cita.hora_inicio|time:"H:i" }} - {{ cita.hora_fin|time:"H:i" }}</td>
