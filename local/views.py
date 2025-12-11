@@ -133,13 +133,13 @@ def registro(request):
             email=email
         )
 
-        # 🔥 AUTO-LOGIN inmediato
+        # Auto-login
         login(request, user)
 
         messages.success(request, 'Cuenta creada y sesión iniciada correctamente')
-        return redirect('cuenta')  # Lo manda a su panel / cuenta
+        return redirect('cuenta')  # Después del registro
 
-    return render(request, 'local/cuenta.html')
+    return render(request, 'local/registro.html')  # ← ESTA ES LA CORRECCIÓN
 
 
 def consulta_personalizada(request):
