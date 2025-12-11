@@ -2,103 +2,127 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Cuenta</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Cuenta</title>
 
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            background-color: #f4f4f9;
-            font-family: Arial, sans-serif;
-        }
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+            font-family: Arial, sans-serif;
+        }
 
-        .account-creation-container {
-            max-width: 400px;
-            width: 90%;
-            padding: 20px 30px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            background-color: #ffffff;
-        }
+        .account-creation-container {
+            max-width: 400px;
+            width: 90%;
+            padding: 20px 30px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            background-color: #ffffff;
+        }
 
-        h2 {
-            text-align: center;
-            color: #333;
-        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
 
-        p {
-            text-align: center;
-            color: #777;
-        }
+        p {
+            text-align: center;
+            color: #777;
+        }
 
-        .form-group {
-            margin-bottom: 15px;
-        }
+        .form-group {
+            margin-bottom: 15px;
+        }
 
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #555;
-        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
 
-        input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
 
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 1.1em;
-            cursor: pointer;
-            margin-top: 20px;
-        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin-top: 20px;
+            margin-bottom: 10px; /* Ajuste para dar espacio al enlace */
+        }
 
-        button:hover {
-            background-color: #0056b3;
-        }
-    </style>
+        button:hover {
+            background-color: #0056b3;
+        }
+        
+        .help-links {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .help-links a {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+
+        .help-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
 
 <div class="account-creation-container">
-    <h2>CREAR CUENTA</h2>
-    <p>Los campos marcados con * son obligatorios</p>
+    <h2>CREAR CUENTA</h2>
+    <p>Los campos marcados con * son obligatorios</p>
 
-    <form action="{% url 'cuenta' %}" method="POST">
-        {% csrf_token %}
+    <form action="{% url 'cuenta' %}" method="POST">
+        {% csrf_token %}
 
-        <div class="form-group">
-            <label for="new_username">Nombre de Usuario *</label>
-            <input type="text" id="new_username" name="new_username" required>
-        </div>
+        <div class="form-group">
+            <label for="new_username">Nombre de Usuario *</label>
+            <input type="text" id="new_username" name="new_username" required>
+        </div>
 
-        <div class="form-group">
-            <label for="new_password">Contraseña *</label>
-            <input type="password" id="new_password" name="new_password" required>
-        </div>
+        <div class="form-group">
+            <label for="new_password">Contraseña *</label>
+            <input type="password" id="new_password" name="new_password" required>
+        </div>
 
-        <div class="form-group">
-            <label for="email">Correo Electrónico *</label>
-            <input type="email" id="email" name="email" required>
-        </div>
+        <div class="form-group">
+            <label for="email">Correo Electrónico *</label>
+            <input type="email" id="email" name="email" required>
+        </div>
 
-        <button type="submit">Registrarse</button>
-    </form>
+        <button type="submit">Registrarse</button>
+    </form>
+    
+    <p style="font-size: 0.8em; color: green; margin-top: 10px;">
+        * Se enviará un correo de confirmación a tu dirección al completar el registro.
+    </p>
+
+    <div class="help-links">
+        <a href="{% url 'restablecer_contrasena' %}">¿Olvidaste tu contraseña?</a>
+    </div>
 </div>
 
 </body>
