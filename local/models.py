@@ -81,13 +81,14 @@ class ServicioSolicitado(models.Model):
     cantidad = models.PositiveIntegerField()
     fecha_solicitud = models.DateTimeField(auto_now_add=True)
 
-
 class Cita(models.Model):
     """Modelo para registrar una cita de servicio agendada."""
 
     ESTADOS = [
         ('PENDIENTE', 'Pendiente de Confirmación'),
-        # ... (otros estados)
+        ('CONFIRMADA', 'Confirmada'),
+        ('CANCELADA', 'Cancelada'),
+        ('FINALIZADA', 'Finalizada'),
     ]
 
     cliente = models.ForeignKey(
@@ -110,4 +111,3 @@ class Cita(models.Model):
 
     def __str__(self):
         return f"Cita de {self.cliente.username} el {self.fecha_cita} a las {self.hora_inicio}"
-
