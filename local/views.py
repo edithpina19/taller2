@@ -12,7 +12,35 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Count
 from .models import Usuario, Comentario, Consulta, Solicitud, ServicioSolicitado, Cita
 from .gemini_local_bot import responder
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import user_passes_test
+from .models import Cita
 
+def admin_required(view_func):
+    decorated_view_func = user_passes_test(
+        lambda u: u.is_active and u.is_staff
+    )(view_func)
+    return decorated_view_func
+
+@admin_required
+def panel_citas(request):
+    citas = Cita.objects.all().order_by('-fecha_creacion')
+    return render(request, 'panel_citas.html', {'citas': citas})
+
+@admin_required
+def confirmar_cita(request, cita_id):
+    cita = get_object_or_404(Cita, id=cita_id)
+    cita.estado = 'CONFIRMADA'
+    cita.save()
+    return redirect('panel_citas')
+
+@admin_required
+def cancelar_cita(request, cita_id):
+    cita = get_object_or_404(Cita, id=cita_id)
+    cita.estado = 'CANCELADA'
+    cita.save()
+    return redirect('panel_citas')
+    
 @csrf_exempt
 def chatbot_api(request):
     if request.method == "POST":
