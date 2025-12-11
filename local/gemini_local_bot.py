@@ -7,9 +7,8 @@ import time
 # CONFIGURACIÓN GEMINI API (VERSION CORREGIDA CON LIBRERÍA OFICIAL)
 # ==============================
 
-# 1. Usar la clave directamente para tu prueba (Malo para producción, bueno para probar)
-# En un entorno real, usarías os.environ.get("GEMINI_API_KEY")
-API_KEY = "AIzaSyBvfB68OeSxrh-OBYl8aRHJZ-su-LeB28M"
+# 1. Usar la clave desde variable de entorno (SEGURO)
+API_KEY = os.environ.get("GEMINI_API_KEY")
 
 # 2. Inicializar el cliente de la API (Solo si la clave está disponible)
 CLIENT = None
