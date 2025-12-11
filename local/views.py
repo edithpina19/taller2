@@ -1,4 +1,4 @@
-# ARCHIVO DE VIEWS/LOCAL
+#ARCHIVO DE VIEWS/LOCAL
 import json
 from datetime import datetime
 from django.shortcuts import render, redirect
@@ -120,28 +120,21 @@ def registro(request):
 
         if not username or not password:
             messages.error(request, 'Faltan datos obligatorios')
-            # Si usas 'registro' en tu urls.py para la vista de registro (cuenta.html), usa 'registro'. 
-            # Si usas 'cuenta', usa 'cuenta'. Asumo que estás usando 'registro' para esta vista, pero redirige a la URL 'registro'
-            return redirect('registro') 
+            return redirect('registro')
 
         if User.objects.filter(username=username).exists():
             messages.error(request, 'Ese usuario ya existe')
             return redirect('registro')
 
-        # Crea el usuario en la tabla de User de Django
         User.objects.create_user(
             username=username,
             password=password,
             email=email
         )
 
-        messages.success(request, 'Cuenta creada correctamente. ¡Ahora inicia sesión!')
-        
-        # 🚨 CORRECCIÓN CLAVE: Redirige al usuario a la página de LOGIN ('iniciar_sesion')
-        # para que ingrese con la cuenta recién creada.
-        return redirect('iniciar_sesion')
+        messages.success(request, 'Cuenta creada correctamente')
+        return redirect('cuenta')
 
-    # Renderiza la plantilla de registro ('cuenta.html' es tu plantilla de registro)
     return render(request, 'local/cuenta.html')
 
 def consulta_personalizada(request):
@@ -181,18 +174,22 @@ def mis_solicitudes(request):
     # 2. Obtener los servicios solicitados masivamente
     servicios_solicitados = ServicioSolicitado.objects.filter(usuario=request.user).order_by('-fecha_solicitud')
 
+    # 3. Puedes combinarlos o pasarlos por separado.
+    # Por ahora, pasamos ambos diccionarios al template.
+
     contexto = {
         'solicitudes_antiguas': solicitudes_antiguas,
         'servicios_solicitados': servicios_solicitados,
+        # Si prefieres solo usar el nuevo modelo, cambia 'solicitudes' en tu template.
     }
 
     return render(request, 'local/mis_solicitudes.html', contexto)
 
 
+# ... (El resto del código sin cambios) ...
+
 @login_required
 def cuenta(request):
-    # Nota: Esta vista está protegida por @login_required. 
-    # Si el registro redirigiera aquí, causaría el error anterior si el usuario no estuviera logueado.
     solicitudes = Solicitud.objects.filter(cliente=request.user)
 
     return render(request, 'local/cuenta.html', {
@@ -209,9 +206,7 @@ def cerrar_sesion(request):
     logout(request)
     return redirect('iniciar_sesion')
 
-def logout_view(request):
-    request.session.flush()  # elimina toda la sesión
-    return redirect("index")  # lo manda a la página principal 
+from django.shortcuts import render
 
 def huella_carbono(request):
     return render(request, 'huella_carbono.html')
@@ -222,14 +217,17 @@ def agregar_servicio(request):
     if request.method == 'POST':
 
         # 1. 🔑 OBTENER DATOS DE FORMA SEGURA USANDO .get()
+        # Esto previene el KeyError si el navegador omite el campo
         aparato_codigo = request.POST.get('aparato_code')
         cantidad_str = request.POST.get('cantidad')
 
+        # Si alguno de los campos esenciales falta, mostramos error
         if not aparato_codigo or not cantidad_str:
             messages.error(request, "Error: Faltan datos esenciales del formulario (código o cantidad).")
+            # Redirigimos a la vista de servicios, que asumimos es el catálogo
             return redirect('servicios')
 
-        # 2. 🔢 VALIDAR Y CONVERTIR LA CANTIDAD
+            # 2. 🔢 VALIDAR Y CONVERTIR LA CANTIDAD
         try:
             cantidad = int(cantidad_str)
             if cantidad <= 0:
@@ -240,17 +238,25 @@ def agregar_servicio(request):
             messages.error(request, "Error: La cantidad enviada no es un número válido.")
             return redirect('servicios')
 
+        # local/views.py
+
+        # ... (código previo de la función)
+
         # 3. 💾 LÓGICA DE GUARDADO EN LA BASE DE DATOS
         try:
+            # Crea y guarda la instancia del modelo
+
+            # 🚨 ¡ESTAS LÍNEAS DEBEN ESTAR ACTIVAS Y CORREGIDAS!
             ServicioSolicitado.objects.create(
-                usuario=request.user,  
-                aparato_nombre=aparato_codigo,  
+                usuario=request.user,  # Corregido: usa 'usuario' en lugar de 'user'
+                aparato_nombre=aparato_codigo,  # Corregido: usa 'aparato_nombre' en lugar de 'aparato'
                 cantidad=cantidad,
+                # El campo 'fecha_solicitud' se llena automáticamente (auto_now_add=True)
             )
 
             # 4. ✅ MENSAJE DE ÉXITO Y REDIRECCIÓN
             messages.success(request, f"¡Solicitud de {cantidad}x {aparato_codigo} registrada en Admin con éxito!")
-            return redirect('servicios')  
+            return redirect('servicios')  # Redirige al catálogo o a donde tengas la lista de servicios
 
         except Exception as e:
             # 5. ❌ MANEJO DE ERRORES DE LA BASE DE DATOS
@@ -259,18 +265,25 @@ def agregar_servicio(request):
             return redirect('servicios')
 
 
+# local/views.py
+
 @login_required
 def agregar_servicios_masivo(request):
     if request.method == 'POST':
+
+        # ⭐️ DEFINICIÓN CRÍTICA Y SEGURA ⭐️
         try:
+            # Intentamos obtener la cuenta y convertirla a entero.
             total_items_count = int(request.POST.get('total_items_count', 0))
         except (ValueError, TypeError):
+            # Si falla la conversión (ej: no se envió), la hacemos cero.
             total_items_count = 0
 
         if total_items_count == 0:
             messages.warning(request, "No se encontraron aparatos seleccionados.")
             return redirect('servicios')
 
+        # El bucle 'for' ahora es seguro
         for i in range(total_items_count):
             aparato_code = request.POST.get(f'item_{i}_code')
             cantidad = request.POST.get(f'item_{i}_qty')
@@ -281,6 +294,7 @@ def agregar_servicios_masivo(request):
                 cantidad = 0
 
             if aparato_code and cantidad > 0:
+                # Asegúrate de que el modelo sea 'ServicioSolicitado' y no 'SolicitudServicio'
                 ServicioSolicitado.objects.create(
                     aparato_nombre=aparato_code,
                     cantidad=cantidad,
@@ -290,6 +304,7 @@ def agregar_servicios_masivo(request):
         messages.success(request,
                          f"Se registraron {total_items_count} tipo(s) de servicio masivamente. ¡Ahora agenda tu cita!")
 
+        # 🎯 USAMOS REDIRECT PARA IR A LA URL LIMPIA 🎯
         return redirect('agendar_cita')
 
     return redirect('servicios')
@@ -299,6 +314,7 @@ def agregar_servicios_masivo(request):
 def agendar_cita(request):
     """
     Renderiza la plantilla HTML del calendario.
+    Esta es la URL que el usuario debe visitar.
     """
     return render(request, 'local/agendar_cita.html')
 
@@ -306,8 +322,9 @@ def agendar_cita(request):
 # --------------------------------------------------------------------------
 # ⭐️ VISTA DE API PARA PROCESAR EL POST (Backend POST) ⭐️
 # --------------------------------------------------------------------------
+# La antigua función 'agendar_cita' ha sido reemplazada por esta API pura.
 
-@csrf_exempt 
+@csrf_exempt  # Necesario si no manejas el CSRFToken en el JS
 @login_required
 def api_agendar_cita_post(request):
     """
@@ -319,11 +336,12 @@ def api_agendar_cita_post(request):
             data = json.loads(request.body)
 
             # 2. Obtener y validar datos
+            # Nota: Tu JS debe enviar 'fecha_cita', 'hora_inicio', 'hora_fin'
             fecha_cita_str = data.get('fecha_cita')
             hora_inicio_str = data.get('hora_inicio')
             hora_fin_str = data.get('hora_fin')
 
-            cliente = request.user 
+            cliente = request.user  # Usuario obtenido por @login_required
 
             # 3. Conversión de formatos para el modelo Cita
             fecha_cita_obj = datetime.strptime(fecha_cita_str, '%Y-%m-%d').date()
@@ -356,23 +374,14 @@ def api_agendar_cita_post(request):
 
 
 def api_disponibilidad(request):
-    # Esta función asume que tienes definida la variable CUPOS_MAXIMOS_POR_DIA en algún lugar
-    # Si no la tienes, esta función generará un NameError.
-    
-    # Define CUPOS_MAXIMOS_POR_DIA aquí si no está globalmente definido
-    # CUPOS_MAXIMOS_POR_DIA = 10 
-    
+    # Asumo que esta función tiene sus importaciones necesarias y está completa.
+    # ... (código de api_disponibilidad) ...
     start_date_str = request.GET.get('start')
     end_date_str = request.GET.get('end')
 
+    # Manejar posibles errores si start/end no están presentes
     if not start_date_str or not end_date_str:
         return JsonResponse([], safe=False)
-
-    try:
-        # Intenta obtener la variable global, si no está definida, usa un valor por defecto seguro.
-        CUPOS_MAXIMOS_POR_DIA = globals().get('CUPOS_MAXIMOS_POR_DIA', 10)
-    except NameError:
-         CUPOS_MAXIMOS_POR_DIA = 10 
 
     citas_en_rango = Cita.objects.filter(
         fecha_cita__gte=start_date_str,
@@ -407,3 +416,7 @@ def api_disponibilidad(request):
         })
 
     return JsonResponse(eventos, safe=False)
+
+def logout_view(request):
+    request.session.flush()  # elimina toda la sesión
+    return redirect("index")  # lo manda a la página principal
