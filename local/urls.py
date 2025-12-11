@@ -27,5 +27,6 @@ urlpatterns = [
     path('crear_cuenta/', views.crear_cuenta, name='cuenta'),
 path('iniciar-sesion/', views.login_view, name='iniciar_sesion'),
     path('crear-cuenta/', views.crear_cuenta, name='registro_definitivo'), # o el nombre que uses para crear_cuenta
-    path('restablecer_contrasena/', auth_views.PasswordResetView.as_view(template_name="local/password_reset_form.html"  ), name='password_reset'),
+path('restablecer_contrasena/', views.restablecer_contrasena_view, name='restablecer_contrasena'),
+
 ]
