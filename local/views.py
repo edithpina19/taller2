@@ -108,6 +108,7 @@ def login_view(request):
     return render(request, 'local/iniciar_sesion.html')
 
 def registro(request):
+
     # Forzar limpieza de sesión fantasma
     if request.user.is_authenticated:
         logout(request)
@@ -131,9 +132,8 @@ def registro(request):
             email=email
         )
 
-        messages.success(request, 'Cuenta creada correctamente. ¡Ahora inicia sesión!')
-        # 🚨 CORRECCIÓN CLAVE: Redirige a la página de LOGIN.
-        return redirect('iniciar_sesion') 
+        messages.success(request, 'Cuenta creada correctamente')
+        return redirect('cuenta')
 
     return render(request, 'local/cuenta.html')
 
