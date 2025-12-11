@@ -111,6 +111,32 @@ AUTH_PASSWORD_VALIDATORS = [
 LOGIN_URL = 'iniciar_sesion'
 LOGIN_REDIRECT_URL = 'mis_solicitudes'
 
+# Definir el backend de correo. Usamos SMTP para servicios externos (como Gmail o SendGrid).
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+# Obtener las credenciales de las variables de entorno para mayor seguridad
+# Asegúrate de definir estas variables (EMAIL_HOST, EMAIL_HOST_USER, etc.) en tu archivo .env (local)
+# y en las variables de entorno de Render (producción).
+EMAIL_HOST = os.environ.get('EMAIL_HOST')                  # Ejemplo: 'smtp.gmail.com'
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))        # Ejemplo: 587 o 465
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True').lower() == 'true' # Debe ser True para Gmail/servicios comunes
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')        # Ejemplo: 'tucorreo@gmail.com'
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')# La contraseña de aplicación/token
+
+# Dirección que aparecerá como remitente por defecto
+DEFAULT_FROM_EMAIL = 'INSTALACIONES UNIVERSALES <no-responder@tudominio.com>' 
+SERVER_EMAIL = EMAIL_HOST_USER # Correo para errores del servidor
+
+# Configuración adicional para Django Auth (Recuperación de Contraseña)
+# URL a la que redirigir después de que el proceso de restablecimiento ha sido completado.
+PASSWORD_RESET_REDIRECT_URL = 'iniciar_sesion' # Redirigir a la página de inicio de sesión
+
+# =============================================================
+# -------------------------------------------------------------
+
+LANGUAGE_CODE = 'es-mx'
+# ... (resto de tu código)
+
 LANGUAGE_CODE = 'es-mx'
 TIME_ZONE = 'America/Mexico_City'
 USE_I18N = True
