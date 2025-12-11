@@ -196,25 +196,20 @@ def consulta_personalizada(request):
 
 @login_required
 def mis_solicitudes(request):
-    # 1. Obtener solicitudes antiguas
     solicitudes_antiguas = Solicitud.objects.filter(cliente=request.user).order_by('-fecha_creacion')
-
-    # 2. Obtener servicios solicitados masivamente
     servicios_solicitados = ServicioSolicitado.objects.filter(usuario=request.user).order_by('-fecha_solicitud')
+    
+    # Obtenemos la última cita del usuario
+    ultima_cita = Cita.objects.filter(cliente=request.user).order_by('-fecha_cita').first()
 
-    # 3. Obtener la última cita agendada del usuario
-    cita = Cita.objects.filter(cliente=request.user).order_by('-fecha_creacion').first()
-
-    # 4. Pasar todo al contexto
     contexto = {
         'solicitudes_antiguas': solicitudes_antiguas,
         'servicios_solicitados': servicios_solicitados,
-        'cita': cita,  # Para mostrar fecha, hora y estado
+        'ultima_cita': ultima_cita,  # <-- PASAMOS LA CITA AL TEMPLATE
     }
 
     return render(request, 'local/mis_solicitudes.html', contexto)
 
-# ... (El resto del código sin cambios) ...
 
 @login_required
 def cuenta(request):
