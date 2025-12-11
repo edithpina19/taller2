@@ -24,5 +24,8 @@ urlpatterns = [
     path("huella_carbono/", views.huella_carbono, name="huella_carbono"),
     path("terminos/", views.terminos, name="terminos"),
     path('crear_cuenta/', views.crear_cuenta, name='cuenta'),
+    path('admin/citas/', views.panel_citas, name='panel_citas'),
+    path('admin/citas/<int:cita_id>/confirmar/', views.confirmar_cita, name='confirmar_cita'),
+    path('admin/citas/<int:cita_id>/cancelar/', views.cancelar_cita, name='cancelar_cita'),
 
 ]
