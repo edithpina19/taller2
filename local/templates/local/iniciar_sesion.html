@@ -79,7 +79,7 @@
     <h2>CREAR CUENTA</h2>
     <p>Los campos marcados con * son obligatorios</p>
 
-    <form action="{% url 'cuenta' %}" method="POST">
+    <form action="{% url 'usuarios/login' %}" method="POST">
         {% csrf_token %}
 
         <div class="form-group">
