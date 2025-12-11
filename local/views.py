@@ -32,6 +32,29 @@ def chatbot_api(request):
 # ------------------------------
 # PÁGINAS BÁSICAS
 # ------------------------------
+def crear_cuenta(request):
+    if request.method == "POST":
+        username = request.POST.get("new_username")
+        password = request.POST.get("new_password")
+        email = request.POST.get("email")
+
+        # Validar si ya existe
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Ese usuario ya existe")
+            return redirect("cuenta")
+
+        # Crear usuario correctamente
+        user = User.objects.create_user(
+            username=username,
+            password=password,
+            email=email
+        )
+        user.save()
+
+        messages.success(request, "Cuenta creada. Ya puedes iniciar sesión.")
+        return redirect("login")  # ← te regresa al login
+
+    return render(request, "crear_cuenta.html")
 
 def index(request):
     return render(request, 'local/index.html')
