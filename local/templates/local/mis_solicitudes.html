@@ -6,19 +6,19 @@
 /* --- Estilos Generales del Contenedor --- */
 .solicitudes-container {
     padding: 20px;
-    background-color: #f8f9fa; /* Fondo gris muy claro */
-    border-radius: 10px; /* Bordes suaves */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Sombra sutil */
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
     margin-bottom: 25px;
-    max-width: 900px; /* Limita el ancho para un mejor diseño */
+    max-width: 900px;
     margin-left: auto;
     margin-right: auto;
 }
 
 /* --- Títulos --- */
 .solicitudes-container h2 {
-    color: #343a40; /* Color de texto oscuro */
-    border-bottom: 3px solid #007bff; /* Línea de color primario */
+    color: #343a40;
+    border-bottom: 3px solid #007bff;
     padding-bottom: 10px;
     margin-bottom: 20px;
 }
@@ -41,7 +41,6 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-/* Encabezado de la Tabla */
 .solicitud-table thead tr {
     background-color: #007bff;
     color: white;
@@ -53,24 +52,20 @@
     font-weight: 600;
 }
 
-/* Filas de Datos */
 .solicitud-table tbody tr {
     border-bottom: 1px solid #dee2e6;
     transition: background-color 0.3s ease;
 }
 
-/* Efecto Hover */
 .solicitud-table tbody tr:hover {
     background-color: #e9ecef;
 }
 
-/* Celdas de Datos */
 .solicitud-table td {
     padding: 12px 15px;
     color: #495057;
 }
 
-/* Quitar el borde de la última fila */
 .solicitud-table tbody tr:last-of-type {
     border-bottom: none;
 }
@@ -86,97 +81,11 @@
     text-align: center;
 }
 
-/* ------------------------------------- */
-/* --- 🗓️ ESTILOS PARA LA AGENDA --- */
-/* ------------------------------------- */
-
-.agenda-list {
-    list-style: none;
-    padding: 0;
-    margin-top: 15px;
-}
-
-.agenda-item {
-    background-color: #ffffff;
-    border: 1px solid #ced4da;
-    border-radius: 6px;
-    padding: 15px;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s ease;
-}
-
-.agenda-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-}
-
-.agenda-date {
-    font-weight: bold;
-    color: #007bff;
-    margin-right: 15px;
-    flex-shrink: 0;
-    font-size: 1.1em;
-    padding-right: 10px;
-    border-right: 1px solid #ced4da;
-}
-
-.agenda-details {
-    flex-grow: 1;
-}
-
-.agenda-title {
-    margin: 0;
-    font-size: 1em;
-    color: #343a40;
-}
-
-.agenda-time {
-    margin: 3px 0 0 0;
-    font-size: 0.85em;
-    color: #6c757d;
-}
-
-/* Estilos para el Bloque de Agenda Vacío */
-
-.empty-agenda-container {
-    text-align: center;
-    padding: 20px 10px;
-    background-color: #ffffff;
-    border-radius: 8px;
-    border: 1px dashed #ced4da;
-    margin-top: 20px;
-}
-
-.empty-agenda-container .empty-message-text {
-    margin-top: 0;
-    color: #6c757d;
-}
-
-/* Estilos del Botón para Agendar */
-.schedule-button {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #28a745; /* Color verde para acción positiva */
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: bold;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    margin-top: 10px;
-}
-
-.schedule-button:hover {
-    background-color: #218838;
-    transform: translateY(-1px);
-}
-
+/* --- Botones --- */
 .btn-regresar {
     display: inline-block;
     padding: 8px 15px;
-    background-color: #2b2b2b; /* Negro grisáceo */
+    background-color: #2b2b2b;
     color: white;
     font-size: 15px;
     text-decoration: none;
@@ -186,8 +95,27 @@
 }
 
 .btn-regresar:hover {
-    background-color: #000000; /* Más oscuro al pasar el mouse */
-    transform: translateX(-2px); /* Se mueve poquito hacia la izquierda */
+    background-color: #000000;
+    transform: translateX(-2px);
+}
+
+.btn-logout {
+    display: inline-block;
+    padding: 8px 15px;
+    background-color: #dc3545;
+    color: white;
+    font-size: 15px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: 0.2s ease-in-out;
+}
+
+.btn-logout:hover {
+    background-color: #c82333;
+    transform: translateY(-1px);
 }
 </style>
 
@@ -218,13 +146,19 @@
                     <td>{{ servicio.cantidad }}</td>
                     <td>{{ servicio.fecha_solicitud|date:"d M Y H:i" }}</td>
 
-                    {% if cita %}
-                        <td>{{ cita.fecha_cita|date:"d M Y" }}</td>
-                        <td>{{ cita.hora_inicio|time:"H:i" }} - {{ cita.hora_fin|time:"H:i" }}</td>
-                        <td>{{ cita.get_estado_display }}</td>
-                    {% else %}
-                        <td colspan="3"><em>Sin cita agendada</em></td>
-                    {% endif %}
+                    {% comment %}
+                        Suponiendo que cada servicio tenga una cita relacionada
+                        Si no la tiene, mostrar "Sin cita agendada"
+                    {% endcomment %}
+                    {% with cita=servicio.usuario.citas_agendadas.last %}
+                        {% if cita %}
+                            <td>{{ cita.fecha_cita|date:"d M Y" }}</td>
+                            <td>{{ cita.hora_inicio|time:"H:i" }} - {{ cita.hora_fin|time:"H:i" }}</td>
+                            <td>{{ cita.get_estado_display }}</td>
+                        {% else %}
+                            <td colspan="3"><em>Sin cita agendada</em></td>
+                        {% endif %}
+                    {% endwith %}
                 </tr>
                 {% endfor %}
             </tbody>
