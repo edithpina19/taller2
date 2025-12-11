@@ -444,3 +444,20 @@ def api_disponibilidad(request):
 def logout_view(request):
     request.session.flush()  # elimina toda la sesión
     return redirect("index")  # lo manda a la página principal
+
+def cuenta_view(request):
+    if request.method == 'POST':
+        # ... lógica para validar y crear el usuario ...
+        
+        # Lógica de Envío de Correo:
+        subject = '¡Bienvenido a INSTALACIONES UNIVERSALES!'
+        message = (
+            f'Hola {new_username},\n\n'
+            'Gracias por registrarte en INSTALACIONES UNIVERSALES. '
+            'Ahora puedes iniciar sesión en nuestro sitio.\n\n'
+            'Atentamente,\nEl Equipo de INSTALACIONES UNIVERSALES'
+        )
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [email]
+
+        send_mail(subject, message, email_from, recipient_list)
