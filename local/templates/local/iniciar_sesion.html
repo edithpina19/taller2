@@ -56,7 +56,7 @@
             </div>
         {% endfor %}
     {% endif %}
-    <form action="{% url 'registro_definitivo' %}" method="POST">
+    <form action="{% url 'registro' %}" method="POST">
         {% csrf_token %}
 
         <div class="mb-3">
@@ -82,7 +82,7 @@
     </p>
 
     <div class="text-center mt-3">
-        ¿Ya tienes cuenta? <a href="{% url 'iniciar_sesion' %}" class="text-decoration-none">Iniciar Sesión</a>
+        ¿Ya tienes cuenta? <a href="{% url 'login' %}" class="text-decoration-none">Iniciar Sesión</a>
     </div>
 </div>
 
