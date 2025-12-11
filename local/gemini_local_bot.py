@@ -1,58 +1,74 @@
-<script>
-// --- Valores Fijos de Simulación (Aumentamos el valor base para que el cambio sea visible) ---
-const TAMANO_BASE_KB = 550; // 550 KB de transferencia (Valor fijo)
-const CO2_BASE_POR_VISITA = 0.003; // G CO₂e (¡Cambiado de 0.00003 a 0.003 para ver variación!)
+import os
+from google import genai
+from google.genai.errors import APIError
+import time
 
-window.onload = function () {
-    
-    // --- 1. Generar Variación Aleatoria Notable ---
-    const rango_variacion = 0.30; // 30% total de rango (-15% a +15%)
-    const factor_aleatorio = 1 + (Math.random() - 0.5) * rango_variacion; 
+# ==============================
+# CONFIGURACIÓN GEMINI API (VERSION CORREGIDA CON LIBRERÍA OFICIAL)
+# ==============================
 
-    // --- 2. Aplicar la Variación a los Datos de CO₂ ---
-    let co2 = CO2_BASE_POR_VISITA * factor_aleatorio;
-    co2 = Math.max(0, co2); 
-    const co2Month = co2 * 1000;
+# 1. Usar la clave directamente para tu prueba (Malo para producción, bueno para probar)
+# En un entorno real, usarías os.environ.get("GEMINI_API_KEY")
+API_KEY = "AIzaSyBvfB68OeSxrh-OBYl8aRHJZ-su-LeB28M"
 
-    // --- 3. Actualizar la Interfaz (DOM) ---
+# 2. Inicializar el cliente de la API (Solo si la clave está disponible)
+CLIENT = None
+if API_KEY and API_KEY.startswith("AIza"):
+    try:
+        CLIENT = genai.Client(api_key=API_KEY)
+    except Exception as e:
+        print(f"Error al inicializar el cliente de Gemini: {e}")
+        CLIENT = None
 
-    document.getElementById("dataSize").textContent = TAMANO_BASE_KB.toFixed(2) + " KB";
-    
-    // Aumentamos a 8 decimales para que el cambio sea visible en la interfaz
-    document.getElementById("co2").textContent = co2.toFixed(8); 
-    document.getElementById("co2Month").textContent = co2Month.toFixed(2);
+if CLIENT is None:
+    print("¡ERROR CRÍTICO! El cliente de la API de Gemini no se pudo inicializar.")
 
-    dibujarGrafica(co2, co2Month);
-};
+# 3. Definición del Contexto/Personalidad
+LOCAL_INFO = """
+Eres el asistente virtual oficial de *Instalaciones Universales*. 
+Tu objetivo es responder preguntas sobre reparaciones, horarios, y cotizaciones iniciales. 
+Sé conciso y profesional.
+"""
 
-// La función para dibujar la gráfica
-function dibujarGrafica(co2, co2Month) {
-    const canvas = document.getElementById("grafica");
-    const ctx = canvas.getContext("2d");
-    canvas.width = canvas.offsetWidth;
-    canvas.height = 240;
 
-    const valores = [co2 || 0.00001, co2Month || 0.01]; 
-    const etiquetas = ["Por visita", "1000 visitas"];
-    const maxValor = Math.max(...valores) || 1;
+def responder(pregunta: str, max_retries=3) -> str:
+    """
+    Realiza la llamada a la API de Gemini con lógica de reintento usando el cliente oficial.
+    """
+    if CLIENT is None:
+        return "El servicio de chat no está configurado correctamente."
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    # Combinamos la instrucción de contexto con la pregunta del usuario
+    full_prompt = [LOCAL_INFO, pregunta]
 
-    valores.forEach((valor, i) => {
-        const altura = (valor / maxValor) * 160;
-        const x = 90 + i * 200;
-        const y = canvas.height - altura - 30;
+    for attempt in range(max_retries):
+        try:
+            # 4. Llamada al Modelo (gestiona automáticamente la URL y los encabezados)
+            response = CLIENT.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=full_prompt
+            )
+            # 5. Respuesta exitosa
+            return response.text
 
-        ctx.fillStyle = "#16a34a";
-        ctx.fillRect(x, y, 100, altura);
+        except APIError as e:
+            # Manejo de errores de la API (ej. clave incorrecta, límite de tasa 429)
+            if attempt < max_retries - 1:
+                print(f"Intento {attempt + 1} fallido (Error: {e}). Reintentando en 2 segundos...")
+                time.sleep(2)
+            else:
+                return f"El servicio de chat no pudo responder después de {max_retries} intentos. Error final: {e}"
+        except Exception as e:
+            # Manejo de otros errores (red, JSON, etc.)
+            return f"Ocurrió un error inesperado: {e}"
 
-        ctx.fillStyle = "#065f46";
-        // Mostrar el valor encima de la barra (con el formato correcto de decimales)
-        // Usamos 8 decimales para el valor por visita
-        const decimales = i === 0 ? 8 : 2; 
-        const valorTexto = valor.toFixed(decimales) + ' g CO₂e';
-        ctx.fillText(valorTexto, x, y - 5); 
-        ctx.fillText(etiquetas[i], x, canvas.height - 10);
-    });
-}
-</script>
+    # Fallback final si el bucle termina por alguna razón
+    return "El servicio de chat no pudo responder después de varios intentos. Intente nuevamente más tarde."
+
+
+# --- Ejemplo de uso ---
+if __name__ == '__main__':
+    if CLIENT:
+        print(f"Respuesta de la IA: {responder('¿Cuál es su horario de atención hoy?')}")
+    else:
+        print("No se puede ejecutar la prueba debido a un error de configuración.")
