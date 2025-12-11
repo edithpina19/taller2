@@ -161,11 +161,11 @@
             </thead>
 
             <tbody>
-                {% for servicio in servicios_solicitados %}
+               {% for servicio in servicios_solicitados %}
                 <tr>
                     <td>
-                        {% if servicio.nombre_aparato and servicio.nombre_aparato != 'Sin nombre' %}
-                            {{ servicio.nombre_aparato }}
+                        {% if servicio.aparato_nombre %}
+                            {{ servicio.aparato_nombre }}
                         {% else %}
                             <span style="color: #cc0000; font-weight: bold;">[APARATO NO CAPTURADO]</span>
                         {% endif %}
@@ -175,11 +175,17 @@
                     
                     <td>{{ servicio.fecha_solicitud|date:"d/m/Y H:i" }}</td> 
 
-                    <td>{{ servicio.fecha_cita|date:"d/m/Y"|default:"-" }}</td> 
+                    <td>
+                        {% if ultima_cita %}
+                            {{ ultima_cita.fecha_cita|date:"d/m/Y" }}
+                        {% else %}
+                            <span style="color: #999; font-style: italic;">Sin agendar</span>
+                        {% endif %}
+                    </td> 
                     
                     <td>
-                        {% if servicio.hora_inicio and servicio.hora_fin %}
-                            {{ servicio.hora_inicio|time:"H:i" }} - {{ servicio.hora_fin|time:"H:i" }}
+                        {% if ultima_cita %}
+                            {{ ultima_cita.hora_cita|time:"H:i" }}
                         {% else %}
                             -
                         {% endif %}
@@ -187,9 +193,9 @@
                     
                     <td>
                         {% if servicio.estado == 'Confirmada' %}
-                            <span class="status-confirmada">{{ servicio.estado }}</span>
+                            <span class="status-confirmada">Confirmada</span>
                         {% else %}
-                            <span class="status-pendiente">{{ servicio.estado|default:"Pendiente" }}</span>
+                            <span class="status-pendiente">Pendiente</span>
                         {% endif %}
                     </td> 
                 </tr>
