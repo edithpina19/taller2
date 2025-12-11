@@ -21,6 +21,15 @@
     <main class="contenedor-principal-formularios">
 
         <section class="formulario-caja" id="login-form">
+            
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
             <h2>🔑 Iniciar Sesión</h2>
 
             <form action="{% url 'iniciar_sesion' %}" method="post"> 
@@ -44,11 +53,10 @@
             <hr style="margin: 20px 0;">
             
             <div style="text-align: center;">
-                <h3>¿Aún no tienes cuenta?</h3>
-                <a href="{% url 'cuenta' %}" class="btn-principal btn-verde">
+                <h3>¿No tienes cuenta?</h3>
+                <a href="{% url 'registro' %}" class="btn-principal btn-verde">
                     Crear Cuenta
                 </a>
-                <p style="margin-top: 10px; font-size: 0.9em; color: #666;">Serás dirigido a la página de registro.</p>
             </div>
             
         </section>
