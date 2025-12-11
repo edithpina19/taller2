@@ -109,7 +109,7 @@ def login_view(request):
 
 def registro(request):
 
-    # Forzar limpieza de sesión fantasma
+    # Si ya está logueado, lo deslogueamos para evitar sesión fantasma
     if request.user.is_authenticated:
         logout(request)
 
@@ -126,16 +126,21 @@ def registro(request):
             messages.error(request, 'Ese usuario ya existe')
             return redirect('registro')
 
-        User.objects.create_user(
+        # Crear usuario
+        user = User.objects.create_user(
             username=username,
             password=password,
             email=email
         )
 
-        messages.success(request, 'Cuenta creada correctamente')
-        return redirect('cuenta')
+        # 🔥 AUTO-LOGIN inmediato
+        login(request, user)
+
+        messages.success(request, 'Cuenta creada y sesión iniciada correctamente')
+        return redirect('cuenta')  # Lo manda a su panel / cuenta
 
     return render(request, 'local/cuenta.html')
+
 
 def consulta_personalizada(request):
     if request.method == "POST":
