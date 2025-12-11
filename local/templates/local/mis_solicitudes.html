@@ -1,5 +1,7 @@
 <style>
-/* ... (Estilos CSS omitidos por brevedad) ... */
+/* ------------------------------------- */
+/* --- 🎨 ESTILOS PARA MIS SOLICITUDES y CUENTA --- */
+/* ------------------------------------- */
 
 .solicitudes-container {
     padding: 20px;
@@ -11,6 +13,8 @@
     margin-left: auto;
     margin-right: auto;
 }
+
+/* ... (Otros estilos de .solicitudes-container y .solicitud-table omitidos por brevedad) ... */
 
 .solicitudes-container h2 {
     color: #343a40;
@@ -97,13 +101,8 @@
             <tbody>
                 {% for servicio in servicios_solicitados %}
                 <tr>
-                    <td>
-                        {% if servicio.nombre_aparato and servicio.nombre_aparato != "Sin nombre" %}
-                            {{ servicio.nombre_aparato }}
-                        {% else %}
-                            **Laptop 💻**
-                        {% endif %}
-                    </td>
+                    <td>**{{ servicio.nombre_aparato|default:"Televisor/Home Theater, etc." }}**</td>
+                    
                     <td>{{ servicio.cantidad|default:"-" }}</td>
                     <td>{{ servicio.fecha_solicitud|date:"d/m/Y H:i" }}</td> 
 
