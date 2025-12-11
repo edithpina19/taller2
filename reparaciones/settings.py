@@ -120,8 +120,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = os.environ.get('EMAIL_HOST')                  # Ejemplo: 'smtp.gmail.com'
 EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))        # Ejemplo: 587 o 465
 EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True').lower() == 'true' # Debe ser True para Gmail/servicios comunes
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')        # Ejemplo: 'tucorreo@gmail.com'
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')# La contraseña de aplicación/token
+EMAIL_HOST_USER = 'pinaportilloedith2@gmail.com' 
+EMAIL_HOST_PASSWORD = 'mfoq ukzq ymhp qhsg' # <--
 
 # Dirección que aparecerá como remitente por defecto
 DEFAULT_FROM_EMAIL = 'INSTALACIONES UNIVERSALES <no-responder@tudominio.com>' 
