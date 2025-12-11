@@ -491,3 +491,61 @@ def cuenta_view(request):
         recipient_list = [email]
 
         send_mail(subject, message, email_from, recipient_list)
+
+# views.py
+
+def crear_cuenta(request):
+    # ... (código de validación y creación de usuario) ...
+
+    try:
+        # 2. Creación del usuario (asumo que se hizo exitosamente)
+        user = User.objects.create_user(
+            username=new_username, 
+            email=email, 
+            password=new_password
+        )
+        
+        # --- 3A. ENVÍO DEL CORREO DE BIENVENIDA AL NUEVO USUARIO ---
+        welcome_subject = '🎉 ¡Bienvenido a INSTALACIONES UNIVERSALES!'
+        welcome_message = (
+            f'Hola {new_username},\n\n'
+            '¡Felicidades! Tu cuenta ha sido creada exitosamente. ...'
+        )
+        # El correo de bienvenida debería llegar a la bandeja del usuario
+        send_mail(
+            welcome_subject, 
+            welcome_message, 
+            settings.DEFAULT_FROM_EMAIL, 
+            [email], 
+            fail_silently=False
+        )
+
+        # --- 3B. ENVÍO DE NOTIFICACIÓN AL ADMINISTRADOR (¡NUEVA LÓGICA!) ---
+        admin_subject = '✅ NUEVO REGISTRO EN INSTALACIONES UNIVERSALES'
+        admin_message = (
+            f'Un nuevo usuario se ha registrado en el sitio web:\n\n'
+            f'Usuario: {new_username}\n'
+            f'Correo Electrónico: {email}\n'
+            f'Fecha de registro: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
+        )
+        # 🚨 Cambia 'tu_correo_de_admin@dominio.com' por tu correo real de administrador 🚨
+        ADMIN_EMAIL = 'pinaportilloedith2@gmail.com' # Puedes usar tu propio correo
+
+        send_mail(
+            admin_subject, 
+            admin_message, 
+            settings.DEFAULT_FROM_EMAIL, 
+            [ADMIN_EMAIL], # Enviamos al administrador
+            fail_silently=True # Lo ponemos en True para que un fallo aquí no rompa el registro
+        )
+        
+        messages.success(request, '¡Cuenta creada! Revisa tu correo (y Spam) para el mensaje de bienvenida.')
+        return redirect('iniciar_sesion') 
+        
+    except Exception as e:
+        # Si algo falla (y tienes fail_silently=False en el envío del welcome email)
+        print(f"❌ ERROR AL ENVIAR CORREO: {e}") 
+        messages.error(request, 'Error al enviar el correo de bienvenida. El usuario fue creado, pero la notificación falló.')
+        return redirect('iniciar_sesion') 
+
+# ... (resto de la función) ...
