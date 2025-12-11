@@ -1,267 +1,213 @@
 <style>
-/* ------------------------------------- */
-/* --- 🎨 ESTILOS PARA MIS SOLICITUDES y CUENTA --- */
-/* ------------------------------------- */
+/* ------------------------------------------- */
+/* --- 🎨 ESTILOS PARA MIS SOLICITUDES (Modernizado) --- */
+/* ------------------------------------------- */
 
-/* --- Estilos Generales del Contenedor --- */
+/* Contenedor principal */
 .solicitudes-container {
-    padding: 20px;
-    background-color: #f8f9fa; /* Fondo gris muy claro */
-    border-radius: 10px; /* Bordes suaves */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Sombra sutil */
-    margin-bottom: 25px;
-    max-width: 900px; /* Limita el ancho para un mejor diseño */
+    padding: 30px; 
+    background-color: #ffffff; 
+    border-radius: 16px; 
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); 
+    margin-bottom: 30px;
+    max-width: 950px; 
     margin-left: auto;
     margin-right: auto;
+    font-family: sans-serif; /* Usaremos una fuente simple si no se carga 'Inter' */
 }
 
-/* --- Títulos --- */
+/* Título principal */
 .solicitudes-container h2 {
-    color: #343a40; /* Color de texto oscuro */
-    border-bottom: 3px solid #007bff; /* Línea de color primario */
-    padding-bottom: 10px;
-    margin-bottom: 20px;
+    color: #1a1a1a; 
+    font-size: 28px;
+    font-weight: 800;
+    border-bottom: 3px solid #0056b3; 
+    padding-bottom: 12px;
+    margin-bottom: 25px;
 }
 
+/* Subtítulo de sección */
 .solicitudes-container h3 {
     color: #495057;
     margin-top: 30px;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: 600;
 }
 
-/* --- Estilos de la Tabla --- */
+/* Tabla de Solicitudes */
 .solicitud-table {
     width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
+    border-collapse: separate; 
+    border-spacing: 0 10px; 
     margin-top: 15px;
     background-color: #ffffff;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-/* Encabezado de la Tabla */
+/* Encabezado de la tabla */
 .solicitud-table thead tr {
-    background-color: #007bff;
+    background-color: #007bff; /* Azul brillante para el encabezado */
     color: white;
     text-align: left;
 }
 
 .solicitud-table th {
-    padding: 12px 15px;
+    padding: 15px 20px;
+    font-weight: 700;
+    font-size: 15px;
+    text-transform: uppercase;
+}
+
+/* Redondear esquinas del encabezado */
+.solicitud-table th:first-child { border-top-left-radius: 10px; }
+.solicitud-table th:last-child { border-top-right-radius: 10px; }
+
+/* Celdas del cuerpo de la tabla */
+.solicitud-table td {
+    padding: 15px 20px;
+    border: none; 
+    background-color: #f7f9fc; /* Fondo muy claro para las filas */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* Sombra sutil para separar filas */
+    font-size: 14px;
+    color: #333;
+}
+
+/* Estilo para la primera y última celda de la fila para redondear */
+.solicitud-table tbody tr td:first-child {
+    border-bottom-left-radius: 8px;
+    border-top-left-radius: 8px;
+    font-weight: 700;
+    color: #0056b3; /* Resaltar el aparato */
+}
+.solicitud-table tbody tr td:last-child {
+    border-bottom-right-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+/* Estilos de Estado */
+.status-confirmada {
+    font-weight: 700;
+    background-color: #e6f7e6; 
+    color: #28a745; /* Verde de éxito */
+    text-align: center;
+    border-radius: 4px;
+    padding: 5px 8px;
+}
+
+.status-pendiente {
+    font-weight: 700;
+    background-color: #fff3cd; 
+    color: #856404; /* Naranja/Amarillo de advertencia */
+    text-align: center;
+    border-radius: 4px;
+    padding: 5px 8px;
+}
+
+/* Estilos para Mensaje Vacío */
+.empty-message {
+    padding: 18px;
+    background-color: #e3f2fd;
+    color: #0056b3;
+    border: 1px solid #bbdefb;
+    border-radius: 8px;
+    margin-top: 30px;
+    text-align: center;
     font-weight: 600;
 }
 
-/* Filas de Datos */
-.solicitud-table tbody tr {
-    border-bottom: 1px solid #dee2e6;
-    transition: background-color 0.3s ease;
-}
-
-/* Efecto Hover */
-.solicitud-table tbody tr:hover {
-    background-color: #e9ecef;
-}
-
-/* Celdas de Datos */
-.solicitud-table td {
-    padding: 12px 15px;
-    color: #495057;
-}
-
-/* Quitar el borde de la última fila */
-.solicitud-table tbody tr:last-of-type {
-    border-bottom: none;
-}
-
-/* Mensajes de No hay Solicitudes (General) */
-.empty-message {
-    padding: 15px;
-    background-color: #fff3cd;
-    color: #856404;
-    border: 1px solid #ffeeba;
-    border-radius: 5px;
-    margin-top: 20px;
-    text-align: center;
-}
-
-/* ------------------------------------- */
-/* --- 🗓️ ESTILOS PARA LA AGENDA --- */
-/* ------------------------------------- */
-
-.agenda-list {
-    list-style: none;
-    padding: 0;
-    margin-top: 15px;
-}
-
-.agenda-item {
-    background-color: #ffffff;
-    border: 1px solid #ced4da;
-    border-radius: 6px;
-    padding: 15px;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s ease;
-}
-
-.agenda-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-}
-
-.agenda-date {
-    font-weight: bold;
-    color: #007bff;
-    margin-right: 15px;
-    flex-shrink: 0;
-    font-size: 1.1em;
-    padding-right: 10px;
-    border-right: 1px solid #ced4da;
-}
-
-.agenda-details {
-    flex-grow: 1;
-}
-
-.agenda-title {
-    margin: 0;
-    font-size: 1em;
-    color: #343a40;
-}
-
-.agenda-time {
-    margin: 3px 0 0 0;
-    font-size: 0.85em;
-    color: #6c757d;
-}
-
-/* Estilos para el Bloque de Agenda Vacío */
-
-.empty-agenda-container {
-    text-align: center;
-    padding: 20px 10px;
-    background-color: #ffffff;
-    border-radius: 8px;
-    border: 1px dashed #ced4da;
-    margin-top: 20px;
-}
-
-.empty-agenda-container .empty-message-text {
-    margin-top: 0;
-    color: #6c757d;
-}
-
-/* Estilos del Botón para Agendar */
-.schedule-button {
+/* Estilos de Botones */
+.btn-regresar, .btn-logout {
     display: inline-block;
     padding: 10px 20px;
-    background-color: #28a745; /* Color verde para acción positiva */
-    color: white;
     text-decoration: none;
-    border-radius: 5px;
-    font-weight: bold;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    margin-top: 10px;
-}
-
-.schedule-button:hover {
-    background-color: #218838;
-    transform: translateY(-1px);
+    border-radius: 8px;
+    font-weight: 600;
+    transition: background-color 0.2s;
+    font-size: 15px;
 }
 
 .btn-regresar {
-    display: inline-block;
-    padding: 8px 15px;
-    background-color: #2b2b2b; /* Negro grisáceo */
+    background-color: #343a40; 
     color: white;
-    font-size: 15px;
-    text-decoration: none;
-    border-radius: 6px;
-    font-weight: bold;
-    transition: 0.2s ease-in-out;
 }
+.btn-regresar:hover { background-color: #495057; }
 
-.btn-regresar:hover {
-    background-color: #000000; /* Más oscuro al pasar el mouse */
-    transform: translateX(-2px); /* Se mueve poquito hacia la izquierda */
+.btn-logout {
+    background-color: #dc3545; /* Rojo */
+    color: white;
+    border: none;
+    cursor: pointer;
 }
+.btn-logout:hover { background-color: #c82333; }
+
 </style>
-
-<a href="javascript:history.back()" class="btn-regresar">
-    &larr; Regresar
-</a>
 
 <div class="solicitudes-container">
     <h2>MIS SOLICITUDES</h2>
 
     {% if servicios_solicitados %}
-        <h3>📦 APARATOS A REPARAR</h3>
+        <h3>📦 APARATOS Y CITAS REGISTRADAS</h3> 
+
         <table class="solicitud-table">
             <thead>
                 <tr>
                     <th>Aparato</th>
-                    <th>Cantidad</th>
-                    <th>Fecha de Solicitud</th>
+                    <th>Cant.</th>
+                    <th>Fecha Solicitud</th>
+                    <th>Fecha de Cita</th>
+                    <th>Hora de Cita</th>
+                    <th>Estado</th>
                 </tr>
             </thead>
+
             <tbody>
                 {% for servicio in servicios_solicitados %}
                 <tr>
-                    <td>{{ servicio.aparato_nombre }}</td>
-                    <td>{{ servicio.cantidad }}</td>
-                    <td>{{ servicio.fecha_solicitud|date:"d M Y H:i" }}</td>
+                    <td>
+                        {% if servicio.nombre_aparato and servicio.nombre_aparato != 'Sin nombre' %}
+                            {{ servicio.nombre_aparato }}
+                        {% else %}
+                            <span style="color: #cc0000; font-weight: bold;">[APARATO NO CAPTURADO]</span>
+                        {% endif %}
+                    </td>
+                    
+                    <td>{{ servicio.cantidad|default:"1" }}</td>
+                    
+                    <td>{{ servicio.fecha_solicitud|date:"d/m/Y H:i" }}</td> 
+
+                    <td>{{ servicio.fecha_cita|date:"d/m/Y"|default:"-" }}</td> 
+                    
+                    <td>
+                        {% if servicio.hora_inicio and servicio.hora_fin %}
+                            {{ servicio.hora_inicio|time:"H:i" }} - {{ servicio.hora_fin|time:"H:i" }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    
+                    <td>
+                        {% if servicio.estado == 'Confirmada' %}
+                            <span class="status-confirmada">{{ servicio.estado }}</span>
+                        {% else %}
+                            <span class="status-pendiente">{{ servicio.estado|default:"Pendiente" }}</span>
+                        {% endif %}
+                    </td> 
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+
     {% else %}
-        <p class="empty-message">No tienes servicios de aparatos registrados (usa el Catálogo de Servicios).</p>
+        <div class="empty-message">
+            No tienes servicios registrados.
+        </div>
     {% endif %}
 
-    {% if solicitudes_antiguas %}
-        <h3>Historial de Solicitudes Antiguas</h3>
-        <p>Tu historial de solicitudes antiguas va aquí...</p>
-    {% endif %}
-<a href="javascript:history.back()" class="btn-regresar">
-    &larr; Regresar
-</a>
-
-<form method="post" action="{% url 'logout' %}" style="display: inline-block; margin-left: 10px;">
-    {% csrf_token %}
-    <button type="submit" class="btn-logout">
-        Cerrar Sesión
-    </button>
-</form>
-
-<div class="solicitudes-container">
-
-
-<style>` para que se vea bien, siguiendo la estética de tu botón `btn-regresar`:
-
-```css
-/* Añade esto dentro de tu bloque <style> */
-
-/* Estilos para el Botón de Cerrar Sesión */
-.btn-logout {
-    /* Basado en el estilo de .btn-regresar */
-    display: inline-block;
-    padding: 8px 15px;
-    background-color: #dc3545; /* Color rojo (peligro/salir) */
-    color: white;
-    font-size: 15px;
-    border: none; /* Quitamos el borde por defecto del button */
-    cursor: pointer; /* Indica que es un elemento cliqueable */
-    text-decoration: none;
-    border-radius: 6px;
-    font-weight: bold;
-    transition: 0.2s ease-in-out;
-}
-
-.btn-logout:hover {
-    background-color: #c82333; /* Rojo más oscuro al pasar el mouse */
-    transform: translateY(-1px);
-}
+    <div style="margin-top: 30px; text-align: right;">
+        <a href="javascript:history.back()" class="btn-regresar">&larr; Regresar</a>
+        <form method="post" action="{% url 'cerrar_sesion' %}" style="display: inline-block; margin-left: 10px;">
+            {% csrf_token %}
+            <button type="submit" class="btn-logout">Cerrar Sesión</button>
+        </form>
+    </div>
+</div>
