@@ -98,12 +98,25 @@
                 </tr>
             </thead>
 
+...
+            <thead>
+                <tr>
+                    <th>Aparato</th>
+                    <th>Cantidad</th>
+                    <th>Fecha de Solicitud</th>
+                    <th>Fecha de Cita</th>  <th>Hora de Cita</th>   <th>Estado</th>
+                </tr>
+            </thead>
+
             <tbody>
                 {% for servicio in servicios_solicitados %}
                 <tr>
-                    <td>**{{ servicio.nombre_aparato|default:"Televisor/Home Theater, etc." }}**</td>
+                    <td>
+                        {{ servicio.nombre_aparato|default:"Aparato Desconocido" }}
+                    </td>
                     
                     <td>{{ servicio.cantidad|default:"-" }}</td>
+                    
                     <td>{{ servicio.fecha_solicitud|date:"d/m/Y H:i" }}</td> 
 
                     <td>{{ servicio.fecha_cita|date:"d/m/Y"|default:"-" }}</td> 
@@ -116,22 +129,11 @@
                         {% endif %}
                     </td>
                     
-                    <td>**Confirmada**</td> 
+                    <td>Confirmada</td> 
                 </tr>
                 {% endfor %}
             </tbody>
-        </table>
-
-    {% else %}
-        <div class="empty-message">
-            No tienes servicios registrados.
-        </div>
-    {% endif %}
-
-    <div style="margin-top: 20px;">
-        <a href="javascript:history.back()" class="btn-regresar">&larr; Regresar</a>
-        <form method="post" action="{% url 'cerrar_sesion' %}" style="display: inline-block; margin-left: 10px;">
-            {% csrf_token %}
+...
             <button type="submit" class="btn-logout">Cerrar Sesión</button>
         </form>
     </div>
