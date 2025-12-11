@@ -12,7 +12,10 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Count
 from .models import Usuario, Comentario, Consulta, Solicitud, ServicioSolicitado, Cita
 from .gemini_local_bot import responder
-    
+from django.core.mail import send_mail
+from django.conf import settings
+
+
 @csrf_exempt
 def chatbot_api(request):
     if request.method == "POST":
@@ -32,29 +35,56 @@ def chatbot_api(request):
 # ------------------------------
 # PÁGINAS BÁSICAS
 # ------------------------------
+# usuarios/views.py (Ejemplo conceptual)
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+from django.core.mail import send_mail
+from django.conf import settings
+from django.contrib import messages # Útil para mostrar mensajes al usuario
+
 def crear_cuenta(request):
-    if request.method == "POST":
-        username = request.POST.get("new_username")
-        password = request.POST.get("new_password")
-        email = request.POST.get("email")
+    if request.method == 'POST':
+        new_username = request.POST.get('new_username')
+        new_password = request.POST.get('new_password')
+        email = request.POST.get('email')
 
-        # Validar si ya existe
-        if User.objects.filter(username=username).exists():
-            messages.error(request, "Ese usuario ya existe")
-            return redirect("cuenta")
+        # 1. Validación básica (deberías usar formularios de Django en un proyecto real)
+        if User.objects.filter(username=new_username).exists() or User.objects.filter(email=email).exists():
+            messages.error(request, 'El nombre de usuario o el correo electrónico ya están en uso.')
+            return render(request, 'crear_cuenta.html') # Asegúrate de usar el nombre de tu template
 
-        # Crear usuario correctamente
-        user = User.objects.create_user(
-            username=username,
-            password=password,
-            email=email
-        )
-        user.save()
+        try:
+            # 2. Creación del usuario
+            user = User.objects.create_user(
+                username=new_username, 
+                email=email, 
+                password=new_password
+            )
+            
+            # 3. Envío del Correo de Bienvenida
+            subject = '🎉 ¡Bienvenido a INSTALACIONES UNIVERSALES!'
+            message = (
+                f'Hola {new_username},\n\n'
+                '¡Felicidades! Tu cuenta en INSTALACIONES UNIVERSALES ha sido creada exitosamente. '
+                'Ahora puedes iniciar sesión con tu nombre de usuario y contraseña.\n\n'
+                '¡Gracias por unirte!\n'
+                'El Equipo de INSTALACIONES UNIVERSALES'
+            )
+            email_from = settings.DEFAULT_FROM_EMAIL
+            recipient_list = [email]
 
-        messages.success(request, "Cuenta creada. Ya puedes iniciar sesión.")
-        return redirect("login")  # ← te regresa al login
+            send_mail(subject, message, email_from, recipient_list, fail_silently=False)
+            
+            messages.success(request, '¡Cuenta creada! Revisa tu correo electrónico para el mensaje de bienvenida.')
+            return redirect('iniciar_sesion') # Redirigir a la página de login
+            
+        except Exception as e:
+            # Manejo de error si falla el envío de correo (ej: credenciales SMTP incorrectas)
+            messages.error(request, f'Error al registrar el usuario o al enviar el correo: {e}.')
+            return render(request, 'crear_cuenta.html')
 
-    return render(request, "crear_cuenta.html")
+    # Si es GET, simplemente muestra el formulario
+    return render(request, 'crear_cuenta.html')
 
 def index(request):
     return render(request, 'local/index.html')
