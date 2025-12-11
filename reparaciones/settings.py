@@ -111,17 +111,31 @@ AUTH_PASSWORD_VALIDATORS = [
 LOGIN_URL = 'iniciar_sesion'
 LOGIN_REDIRECT_URL = 'mis_solicitudes'
 
-# Definir el backend de correo. Usamos SMTP para servicios externos (como Gmail o SendGrid).
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-# Obtener las credenciales de las variables de entorno para mayor seguridad
-# Asegúrate de definir estas variables (EMAIL_HOST, EMAIL_HOST_USER, etc.) en tu archivo .env (local)
-# y en las variables de entorno de Render (producción).
-EMAIL_HOST = os.environ.get('EMAIL_HOST')                  # Ejemplo: 'smtp.gmail.com'
-EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))        # Ejemplo: 587 o 465
-EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True').lower() == 'true' # Debe ser True para Gmail/servicios comunes
-EMAIL_HOST_USER = 'pinaportilloedith2@gmail.com' 
-EMAIL_HOST_PASSWORD = 'mfoq ukzq ymhp qhsg' # <--
+# --- Configuración del servidor (CRÍTICO) ---
+# Usamos Gmail directamente. Si estuviera en .env, sería: os.environ.get('EMAIL_HOST')
+EMAIL_HOST = 'smtp.gmail.com'  
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True 
+EMAIL_USE_SSL = False # Si usas 587 con TLS, asegúrate de que SSL sea False
+
+# --- Credenciales ---
+# Las usaremos directamente aquí ya que las proporcionaste:
+EMAIL_HOST_USER = 'pinaportilloedith2@gmail.com'  
+EMAIL_HOST_PASSWORD = 'mfoq ukzq ymhp qhsg' 
+
+# --- Remitentes ---
+# La dirección que aparecerá como remitente por defecto (IMPORTANTE: ¡DEBE COINCIDIR CON HOST_USER!)
+DEFAULT_FROM_EMAIL = 'INSTALACIONES UNIVERSALES <pinaportilloedith2@gmail.com>' 
+# El texto que envías ('no-responder@tudominio.com') debe ser el mismo correo de EMAIL_HOST_USER, 
+# o Gmail lo bloqueará.
+
+SERVER_EMAIL = EMAIL_HOST_USER # Correo para errores del servidor
+# =============================================================
+# -------------------------------------------------------------
+
+# ... (resto de tu código)
 
 # Dirección que aparecerá como remitente por defecto
 DEFAULT_FROM_EMAIL = 'INSTALACIONES UNIVERSALES <no-responder@tudominio.com>' 
