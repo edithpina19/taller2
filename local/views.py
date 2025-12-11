@@ -209,16 +209,17 @@ def mis_solicitudes(request):
     }
 
     return render(request, 'local/mis_solicitudes.html', contexto)
-
-
+    
 @login_required
 def cuenta(request):
-    solicitudes = Solicitud.objects.filter(cliente=request.user)
+    solicitudes = ServicioSolicitado.objects.filter(usuario=request.user).order_by('-fecha_solicitud')
 
     return render(request, 'local/cuenta.html', {
         'usuario': request.user,
         'solicitudes': solicitudes
     })
+
+
 
 
 # ------------------------------
