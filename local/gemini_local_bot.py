@@ -56,7 +56,7 @@ def responder(pregunta: str, max_retries=3) -> str:
         try:
             # Llamada al Modelo
             response = CLIENT.models.generate_content(
-                model="gemini-2.0-flash", # Ojo: Verifica si usas 1.5 o 2.0 según tu acceso
+                model="gemini-2.5-flash", # Ojo: Verifica si usas 1.5 o 2.0 según tu acceso
                 contents=full_prompt
             )
             return response.text
