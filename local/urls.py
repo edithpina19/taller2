@@ -1,4 +1,5 @@
 from django.urls import path, include
+from django.contrib.auth import views as auth_views # <-- Importación necesaria
 from . import views
 
 urlpatterns = [
@@ -24,5 +25,10 @@ urlpatterns = [
     path("huella_carbono/", views.huella_carbono, name="huella_carbono"),
     path("terminos/", views.terminos, name="terminos"),
     path('crear_cuenta/', views.crear_cuenta, name='cuenta'),
-
+path('iniciar-sesion/', views.login_view, name='iniciar_sesion'),
+    path('crear-cuenta/', views.crear_cuenta, name='registro_definitivo'), # o el nombre que uses para crear_cuenta
+    path('restablecer_contrasena/', auth_views.PasswordResetView.as_view(template_name="local/password_reset_form.html"  ), name='password_reset'),
+    path('restablecer_contrasena/enviado/', auth_views.PasswordResetDoneView.as_view(template_name="local/password_reset_done.html"), name='password_reset_done'),
+    path('restablecer_contrasena/confirmar/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name="local/password_reset_confirm.html"), name='password_reset_confirm'),
+    path('restablecer_contrasena/completado/', auth_views.PasswordResetCompleteView.as_view( template_name="local/password_reset_complete.html" ), name='password_reset_complete'),
 ]
