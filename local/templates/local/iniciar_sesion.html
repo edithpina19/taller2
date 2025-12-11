@@ -49,7 +49,7 @@
     <h2 class="text-center mb-4">CREAR CUENTA</h2>
     <p class="text-center info-text">Los campos marcados con * son obligatorios.</p>
 
-    <form action="{% url 'registro' %}" method="POST">
+    <form action="{% url 'login' %}" method="POST">
         {% csrf_token %}
 
         <div class="mb-3">
