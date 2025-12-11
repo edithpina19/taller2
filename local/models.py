@@ -81,33 +81,4 @@ class ServicioSolicitado(models.Model):
     cantidad = models.PositiveIntegerField()
     fecha_solicitud = models.DateTimeField(auto_now_add=True)
 
-class Cita(models.Model):
-    """Modelo para registrar una cita de servicio agendada."""
-
-    ESTADOS = [
-        ('PENDIENTE', 'Pendiente de Confirmación'),
-        ('CONFIRMADA', 'Confirmada'),
-        ('CANCELADA', 'Cancelada'),
-        ('FINALIZADA', 'Finalizada'),
-    ]
-
-    cliente = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='citas_agendadas'
-    )
-
-    fecha_cita = models.DateField(verbose_name="Fecha de la Cita")
-    hora_inicio = models.TimeField(verbose_name="Hora de Inicio")
-    hora_fin = models.TimeField(verbose_name="Hora de Fin")
-
-    estado = models.CharField(
-        max_length=20,
-        choices=ESTADOS,
-        default='PENDIENTE'
-    )
-
-    fecha_creacion = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"Cita de {self.cliente.username} el {self.fecha_cita} a las {self.hora_inicio}"
+class Cita(models.Model): """Modelo para registrar una cita de servicio agendada.""" ESTADOS = [ ('PENDIENTE', 'Pendiente de Confirmación'), # ... (otros estados) ] cliente = models.ForeignKey( User, on_delete=models.CASCADE, related_name='citas_agendadas' ) fecha_cita = models.DateField(verbose_name="Fecha de la Cita") hora_inicio = models.TimeField(verbose_name="Hora de Inicio") hora_fin = models.TimeField(verbose_name="Hora de Fin") estado = models.CharField( max_length=20, choices=ESTADOS, default='PENDIENTE' ) fecha_creacion = models.DateTimeField(auto_now_add=True) def __str__(self): return f"Cita de {self.cliente.username} el {self.fecha_cita} a las {self.hora_inicio}"
