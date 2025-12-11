@@ -196,23 +196,23 @@ def consulta_personalizada(request):
 
 @login_required
 def mis_solicitudes(request):
-    # 1. Obtener solicitudes del modelo antiguo (si todavía lo usas)
+    # 1. Obtener solicitudes antiguas
     solicitudes_antiguas = Solicitud.objects.filter(cliente=request.user).order_by('-fecha_creacion')
 
-    # 2. Obtener los servicios solicitados masivamente
+    # 2. Obtener servicios solicitados masivamente
     servicios_solicitados = ServicioSolicitado.objects.filter(usuario=request.user).order_by('-fecha_solicitud')
 
-    # 3. Puedes combinarlos o pasarlos por separado.
-    # Por ahora, pasamos ambos diccionarios al template.
+    # 3. Obtener la última cita agendada del usuario
+    cita = Cita.objects.filter(cliente=request.user).order_by('-fecha_creacion').first()
 
+    # 4. Pasar todo al contexto
     contexto = {
         'solicitudes_antiguas': solicitudes_antiguas,
         'servicios_solicitados': servicios_solicitados,
-        # Si prefieres solo usar el nuevo modelo, cambia 'solicitudes' en tu template.
+        'cita': cita,  # Para mostrar fecha, hora y estado
     }
 
     return render(request, 'local/mis_solicitudes.html', contexto)
-
 
 # ... (El resto del código sin cambios) ...
 
