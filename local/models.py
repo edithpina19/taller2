@@ -85,8 +85,9 @@ class Cita(models.Model):
     """Modelo para registrar una cita de servicio agendada."""
 
     ESTADOS = [
-        ('PENDIENTE', 'CONFIRMADA','FINALIZADA'),
-        # ... (otros estados)
+        ('PENDIENTE', 'Pendiente'),
+        ('CONFIRMADA', 'Confirmada'),
+        ('FINALIZADA', 'Finalizada'),
     ]
 
     cliente = models.ForeignKey(
@@ -109,3 +110,5 @@ class Cita(models.Model):
 
     def __str__(self):
         return f"Cita de {self.cliente.username} el {self.fecha_cita} a las {self.hora_inicio}"
+
+
