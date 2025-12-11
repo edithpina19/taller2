@@ -1,3 +1,4 @@
+#iniciar sesion
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
@@ -5,8 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión / Registrarse</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}"> 
-</head>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    </head>
 <body>
     <header>
         <h1>Bienvenido a Instalaciones Universales</h1>
@@ -21,44 +22,104 @@
     <main class="contenedor-principal-formularios">
 
         <section class="formulario-caja" id="login-form">
-            
-            {% if messages %}
-                <ul class="messages">
-                    {% for message in messages %}
-                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-
             <h2>🔑 Iniciar Sesión</h2>
 
-            <form action="{% url 'iniciar_sesion' %}" method="post"> 
-                {% csrf_token %}
+<form action="{% url 'registro' %}" method="post">
+    {% csrf_token %}
+
+    <div class="campo">
+        <label for="username">Nombre de Usuario:</label>
+        <input type="text" id="username" name="username" required>
+    </div>
+
+    <div class="campo">
+        <label for="phone">Celular:</label>
+        <input type="tel" id="phone" name="phone" required>
+    </div>
+
+    <div class="campo">
+        <label for="password">Contraseña:</label>
+        <input type="password" id="password" name="password" required>
+    </div>
+
+    <div class="campo">
+        <label for="email">Correo Electrónico:</label>
+        <input type="email" id="email" name="email">
+    </div>
+
+    <button type="submit" class="btn-principal btn-verde">
+        Crear Cuenta
+    </button>
+</form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                 <div class="campo">
-                    <label for="username_login">Nombre de Usuario:</label>
-                    <input type="text" id="username_login" name="username" required>
+                    <label for="new_username">Nombre de Usuario:</label>
+                    <input type="text" id="new_username" name="new_username" required>
                 </div>
 
                 <div class="campo">
-                    <label for="password_login">Contraseña:</label>
-                    <input type="password" id="password_login" name="password" required>
+                    <label for="new_password">Contraseña:</label>
+                    <input type="password" id="new_password" name="new_password" required>
                 </div>
 
-                <button type="submit" class="btn-principal btn-azul">
-                    Ingresar
-                </button>
+                <div class="campo">
+                    <label for="email">Correo Electrónico:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <button type="submit" class="btn-principal btn-verde">Crear Cuenta</button>
             </form>
-            
-            <hr style="margin: 20px 0;">
-            
-            <div style="text-align: center;">
-                <h3>¿No tienes cuenta?</h3>
-                <a href="{% url 'registro' %}" class="btn-principal btn-verde">
-                    Crear Cuenta
-                </a>
-            </div>
-            
         </section>
 
     </main>
