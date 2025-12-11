@@ -1,7 +1,5 @@
 <style>
-/* ------------------------------------- */
-/* --- 🎨 ESTILOS PARA MIS SOLICITUDES y CUENTA --- */
-/* ------------------------------------- */
+/* ... (Estilos CSS omitidos por brevedad) ... */
 
 .solicitudes-container {
     padding: 20px;
@@ -99,7 +97,13 @@
             <tbody>
                 {% for servicio in servicios_solicitados %}
                 <tr>
-                    <td>{{ servicio.nombre_aparato|default:"Sin nombre" }}</td>
+                    <td>
+                        {% if servicio.nombre_aparato and servicio.nombre_aparato != "Sin nombre" %}
+                            {{ servicio.nombre_aparato }}
+                        {% else %}
+                            **Laptop 💻**
+                        {% endif %}
+                    </td>
                     <td>{{ servicio.cantidad|default:"-" }}</td>
                     <td>{{ servicio.fecha_solicitud|date:"d/m/Y H:i" }}</td> 
 
