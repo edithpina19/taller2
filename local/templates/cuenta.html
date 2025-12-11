@@ -19,6 +19,11 @@
         {% for s in solicitudes %}
             <li>
                 <strong>{{ s.servicio }}</strong><br>
+
+                <!-- ⭐ NUEVO: FECHA Y HORA EN QUE AGENDÓ (fecha_creacion) -->
+                Fecha que agendó: {{ s.fecha_creacion|date:"d M Y H:i" }}<br>
+
+                <!-- Ya existente -->
                 Fecha: {{ s.fecha }}<br>
                 Estado: {{ s.estado }}
             </li>
