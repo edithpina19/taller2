@@ -12,6 +12,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Count
 from .models import Usuario, Comentario, Consulta, Solicitud, ServicioSolicitado, Cita
 from .gemini_local_bot import responder
+from django.core.mail import send_mail  # <--- IMPORTANTE: Importar esto
+from django.conf import settings
 
 @csrf_exempt
 def chatbot_api(request):
@@ -44,15 +46,31 @@ def crear_cuenta(request):
             return redirect("cuenta")
 
         # Crear usuario correctamente
-        user = User.objects.create_user(
-            username=username,
-            password=password,
-            email=email
-        )
-        user.save()
+        try:
+            user = User.objects.create_user(
+                username=username,
+                password=password,
+                email=email
+            )
+            # user.save() no es necesario con create_user, pero no estorba.
 
-        messages.success(request, "Cuenta creada. Ya puedes iniciar sesión.")
-        return redirect("login")  # ← te regresa al login
+            # 2. ENVIAR EL CORREO (Aquí está la magia)
+            subject = '¡Bienvenido a Instalaciones Universales!'
+            message = f'Hola {username}, gracias por registrarte. Tu cuenta ha sido creada exitosamente.'
+            email_from = settings.EMAIL_HOST_USER
+            recipient_list = [email]
+
+            try:
+                send_mail(subject, message, email_from, recipient_list)
+            except Exception as e:
+                # Si falla el correo, no queremos que falle el registro, solo avisamos en consola
+                print(f"Error enviando correo: {e}")
+
+            messages.success(request, "Cuenta creada. Revisa tu correo.")
+            return redirect("login")
+
+        except Exception as e:
+            messages.error(request, f"Error al crear usuario: {e}")
 
     return render(request, "crear_cuenta.html")
 
