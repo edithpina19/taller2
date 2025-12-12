@@ -113,34 +113,17 @@ LOGIN_URL = 'iniciar_sesion'
 LOGIN_REDIRECT_URL = 'mis_solicitudes'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
-# --- Configuración del servidor (CRÍTICO) ---
-# Usamos Gmail directamente. Si estuviera en .env, sería: os.environ.get('EMAIL_HOST')
-EMAIL_HOST = 'smtp.gmail.com'  
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_USE_TLS = True 
-EMAIL_USE_SSL = False # Si usas 587 con TLS, asegúrate de que SSL sea False
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
 
-# --- Credenciales ---
-# Las usaremos directamente aquí ya que las proporcionaste:
-EMAIL_HOST_USER = 'pinaportilloedith2@gmail.com'  
-EMAIL_HOST_PASSWORD = 'mfoq ukzq ymhp qhsg' 
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
-# --- Remitentes ---
-# La dirección que aparecerá como remitente por defecto (IMPORTANTE: ¡DEBE COINCIDIR CON HOST_USER!)
-DEFAULT_FROM_EMAIL = 'INSTALACIONES UNIVERSALES <pinaportilloedith2@gmail.com>' 
-# El texto que envías ('no-responder@tudominio.com') debe ser el mismo correo de EMAIL_HOST_USER, 
-# o Gmail lo bloqueará.
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-SERVER_EMAIL = EMAIL_HOST_USER # Correo para errores del servidor
-# =============================================================
-# -------------------------------------------------------------
 
-# ... (resto de tu código)
-
-# Dirección que aparecerá como remitente por defecto
-DEFAULT_FROM_EMAIL = 'INSTALACIONES UNIVERSALES <no-responder@tudominio.com>' 
-SERVER_EMAIL = EMAIL_HOST_USER # Correo para errores del servidor
 
 # Configuración adicional para Django Auth (Recuperación de Contraseña)
 # URL a la que redirigir después de que el proceso de restablecimiento ha sido completado.
